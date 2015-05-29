@@ -57,39 +57,6 @@ build.GRanges <- function(peak, directories)
     peakRange$allTF = ifelse(rowSums(as.matrix(peakData[,allTF])) > 0 ,1,0)
     return(peakRange)
 }
-#-------------------------------------------------------------------------------
-load.Profiles <- function(peaks,histones,profileDir)
-{
-    loadProfile_peak <- function(peak,histones,profileDir)
-    {
-        # A list of histone profile for each peak setaq
-      loadProfile_histone <-function(histone,peak,profileDir)
-        {
-          load(file = file.path(profileDir,"wgEncodeBroadHistone",paste0(histone,"Rep1"),paste0("profileCurves_",peak,".RData")))
-              profileCurves = norm.profile.Curves
-          return(profileCurves)
-        }
-      peak_profiles = lapply( histones, FUN = loadProfile_histone, peak, profileDir )
-      names(peak_profiles) = histones
-      return(peak_profiles)
-    }
-    profiles = lapply(peaks, FUN = loadProfile_peak, histones,profileDir)
-    names(profiles) = peaks
-
-    return(profiles)
-}
-#--------------------------------------------------------
-create.RBPJ <- function(histone,ranges,all.profiles)
-{
-    # Creates the profile matrices for RBPJ
-    jk92 = ranges[["JK92"]]
-    jk234 = ranges[["JK234"]]
-    jk92$profile = t(all.profiles[["JK92"]][[histone]])
-    jk234$profile = t(all.profiles[["JK234"]][[histone]])
-    jk92_sub = subset(jk92,JK234 == 0)
-    rbpj = c(jk234,jk92_sub)
-    return(t(rbpj$profile))
-}
 #--------------------------------------------------------
 filter.outlier <- function(histone,peak,idx,all.profiles)
 {
