@@ -1,0 +1,45 @@
+
+### Heatmaps analysis
+
+For this analysis we are considering the rows after already filtering
+the peaks that overlap any of the blacklisted regions and the columns
+are already grouped by transcription factors.
+
+```{r setup, include =FALSE,echo = FALSE,eval=TRUE}
+
+rm(list = ls())
+graphics.off()
+
+library(ggplot2)
+library(data.table)
+library(RColorBrewer)
+library(reshape2)
+library(broom)
+library(grid)
+library(gridExtra)
+library(cluster)
+library(GenomicRanges)
+
+opts_knit$set(root.dir=normalizePath('../'))
+opts_chunk$set(fig.path = "../figures/heatmaps/")
+
+## loads binary matrices + functions to generate them
+load("../data/ranges/all_EBV_GenomicRanges.RData")
+source("../R/heatmap_functions.R")
+peaks = c("EBNA2","EBNA3A","EBNA3B","EBNA3C","RBPJ")
+
+cols_to_remove <- function(patterns,set)
+{
+  ll = lapply(pattern,FUN = grepl_cmd,set)
+  n = length(ll)
+  ll = as.list(paste0(ll,c(rep("&",n-1),"")))
+  return(do.call(paste0,ll))
+}
+
+
+```
+
+
+
+
+
