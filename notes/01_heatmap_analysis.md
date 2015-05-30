@@ -69,3 +69,4 @@ If we calculate the proportions of each TF, and sort them we can get the followi
 
 
 
+

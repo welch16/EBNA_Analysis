@@ -110,7 +110,7 @@ print_hm(hms[[7]])
 
 If we calculate the proportions of each TF, and sort them we can get the following:
 
-```{r proportions_dnaseFilter,fig.width=6,fig.heigth=4,dpi=200,echo=FALSE}
+```{r proportions_dnaseFilter,fig.width=6,fig.heigth=6,dpi=200,echo=FALSE}
 
 
 propPlots <- lapply(dts,function(x){
@@ -127,6 +127,7 @@ propPlots[[4]] + ggtitle("EBNA3C")
 propPlots[[7]] + ggtitle("RBPJ")
 
 ```
+
 
 
 
