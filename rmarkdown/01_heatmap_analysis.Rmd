@@ -19,7 +19,13 @@ library(grid)
 library(gridExtra)
 library(cluster)
 library(GenomicRanges)
+library(gtable)
 
+
+library(ggdendro)
+source("../R/heatmap_functions.R")
+
+library(knitr)
 opts_knit$set(root.dir=normalizePath('../'))
 opts_chunk$set(fig.path = "../figures/heatmaps/")
 
@@ -27,6 +33,7 @@ opts_chunk$set(fig.path = "../figures/heatmaps/")
 load("../data/ranges/all_EBV_GenomicRanges.RData")
 source("../R/heatmap_functions.R")
 peaks = c("EBNA2","EBNA3A","EBNA3B","EBNA3C","RBPJ")
+pattern = c("EBNA","RBPJ","H?K","Dnase","H2Z")
 
 cols_to_remove <- function(patterns,set)
 {
@@ -36,8 +43,75 @@ cols_to_remove <- function(patterns,set)
   return(do.call(paste0,ll))
 }
 
+get_names <- function(range_data) return(names(range_data@elementMetadata@listData))
+
+grepl_cmd <- function(variable,set)
+{
+return(paste0("!grepl(",change_to_str_val(variable),",",set,")",sep =""))
+}
+
+change_to_str_val <- function(str) return(paste0("'",str,"'"))
+
+mc = 8
 
 ```
+
+#### Filtering to peaks that overlap Dnase hypersensitive sites
+
+We generate the matrices and proportion vectors:
+
+```{r mats}
+
+mats <- mcmapply(build_binary_matrix, names(ranges),ranges,
+  MoreArgs = list(expr = "Dnase == 1",
+             col_expr = cols_to_remove(pattern,'columns')),
+			 SIMPLIFY=FALSE,mc.silent=TRUE,mc.cores = mc)
+
+proportions <- lapply(mats,get_proportions)
+
+```
+
+```{r hms,include=FALSE,echo=FALSE,eval=TRUE}
+hms <- mcmapply(gg_heatmap,mats,names(mats),mc.cores = mc,SIMPLIFY=FALSE)
+```
+
+```{r hm_dnaseFilter ,fig.width=6,fig.heigth=8,dpi=120,echo=FALSE}
+
+print_hm(hms[[1]])
+print_hm(hms[[2]])
+print_hm(hms[[3]])
+print_hm(hms[[4]])
+print_hm(hms[[7]])
+
+```
+
+If we calculate the proportions of each TF, and sort them we can get the following:
+
+```{r proportions,fig.width=7,fig.heigth=7,dpi=120,echo=FALSE}
+
+dts <- lapply(proportions,function(x){
+  dt = data.table(names = names(x),props = x)
+  return(dt)})
+
+propPlots <- lapply(dts,function(x){
+  p = ggplot(x,aes(reorder(names,-props),props))+
+    geom_bar(stat = "identity",position = "dodge")+
+	theme(axis.text.x = element_text(angle = 90,size = 6))+xlab("TF")+
+	ylab("Proportions of peaks that overlap with TF")
+  return(p)})
+  
+propPlots[[1]] + ggtitle("EBNA2")
+propPlots[[2]] + ggtitle("EBNA3A")
+propPlots[[3]] + ggtitle("EBNA3B")
+propPlots[[4]] + ggtitle("EBNA3C")
+propPlots[[7]] + ggtitle("RBPJ")
+
+```
+
+
+
+
+
 
 
 
