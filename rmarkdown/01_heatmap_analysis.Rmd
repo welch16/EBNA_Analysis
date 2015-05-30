@@ -58,6 +58,7 @@ mc = 8
 
 #### Filtering to peaks that overlap Dnase hypersensitive sites
 
+
 We generate the matrices and proportion vectors:
 
 ```{r mats}
@@ -73,7 +74,30 @@ proportions <- lapply(mats,get_proportions)
 
 ```{r hms,include=FALSE,echo=FALSE,eval=TRUE}
 hms <- mcmapply(gg_heatmap,mats,names(mats),mc.cores = mc,SIMPLIFY=FALSE)
+
+dts <- lapply(proportions,function(x){
+  dt = data.table(names = names(x),props = x)
+  return(dt)})
+
+top <- 10
 ```
+We can see that the top `r top`, TFs are for each dataset:
+
+```{r topdata,include=TRUE,echo=FALSE,eval=TRUE,results='markup'}
+
+tab <- lapply(dts,function(x,top){
+  y = copy(x)
+  y[,props:=NULL]
+  return(y[1:top])},top)
+tab <- do.call(cbind,tab)
+setnames(tab,names(tab),names(dts))
+kable(tab,row.names = 1:10)
+
+```
+
+It is worth noticing that several entries of the table above
+coincide. In particular RUNX3, EBF1, PAX5, etc.
+
 
 ```{r hm_dnaseFilter ,fig.width=6,fig.heigth=8,dpi=120,echo=FALSE}
 
@@ -82,20 +106,16 @@ print_hm(hms[[2]])
 print_hm(hms[[3]])
 print_hm(hms[[4]])
 print_hm(hms[[7]])
-
 ```
 
 If we calculate the proportions of each TF, and sort them we can get the following:
 
-```{r proportions_dnaseFilter,fig.width=6,fig.heigth=4,dpi=120,echo=FALSE}
+```{r proportions_dnaseFilter,fig.width=6,fig.heigth=4,dpi=200,echo=FALSE}
 
-dts <- lapply(proportions,function(x){
-  dt = data.table(names = names(x),props = x)
-  return(dt)})
 
 propPlots <- lapply(dts,function(x){
   p = ggplot(x,aes(reorder(names,-props),props))+
-    geom_bar(stat = "identity",position = "dodge")+
+    geom_bar(stat = "identity",position = "dodge",width=.8)+
 	theme(axis.text.x = element_text(angle = 90,size = 6))+xlab("TF")+
 	ylab("Proportions of peaks that overlap with TF")
   return(p)})
@@ -107,8 +127,6 @@ propPlots[[4]] + ggtitle("EBNA3C")
 propPlots[[7]] + ggtitle("RBPJ")
 
 ```
-
-
 
 
 
