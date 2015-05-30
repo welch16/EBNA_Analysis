@@ -87,7 +87,7 @@ print_hm(hms[[7]])
 
 If we calculate the proportions of each TF, and sort them we can get the following:
 
-```{r proportions,fig.width=7,fig.heigth=7,dpi=120,echo=FALSE}
+```{r proportions_dnaseFilter,fig.width=6,fig.heigth=4,dpi=120,echo=FALSE}
 
 dts <- lapply(proportions,function(x){
   dt = data.table(names = names(x),props = x)

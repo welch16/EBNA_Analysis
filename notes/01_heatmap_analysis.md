@@ -27,7 +27,7 @@ proportions <- lapply(mats,get_proportions)
 
 If we calculate the proportions of each TF, and sort them we can get the following:
 
-![plot of chunk proportions](../figures/heatmaps/proportions-1.png) ![plot of chunk proportions](../figures/heatmaps/proportions-2.png) ![plot of chunk proportions](../figures/heatmaps/proportions-3.png) ![plot of chunk proportions](../figures/heatmaps/proportions-4.png) ![plot of chunk proportions](../figures/heatmaps/proportions-5.png) 
+![plot of chunk proportions_dnaseFilter](../figures/heatmaps/proportions_dnaseFilter-1.png) ![plot of chunk proportions_dnaseFilter](../figures/heatmaps/proportions_dnaseFilter-2.png) ![plot of chunk proportions_dnaseFilter](../figures/heatmaps/proportions_dnaseFilter-3.png) ![plot of chunk proportions_dnaseFilter](../figures/heatmaps/proportions_dnaseFilter-4.png) ![plot of chunk proportions_dnaseFilter](../figures/heatmaps/proportions_dnaseFilter-5.png) 
 
 
 
