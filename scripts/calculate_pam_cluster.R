@@ -44,10 +44,10 @@ mats <- mcmapply(build_binary_matrix, names(ranges),ranges,
              col_expr = cols_to_remove(pattern,'columns')),
 			 SIMPLIFY=FALSE,mc.silent=TRUE,mc.cores = mc)
 
-maxClusters <- 4
+maxClusters <- 15
 clusters <- lapply(mats[-(5:6)],function(x,maxClusters){
   mclapply(1:(maxClusters-1),function(k,y){
     pam_silhouette_dt(y,k+1)},x,mc.cores = mc,mc.preschedule = TRUE,
            mc.silent = TRUE)},maxClusters)
 
-save(clusters,"data/RData/pam_clusters.RData")
+save(clusters,file = "data/RData/pam_clusters.RData")

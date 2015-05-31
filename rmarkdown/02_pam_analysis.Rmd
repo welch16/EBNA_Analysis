@@ -1,0 +1,118 @@
+
+### Partition around medoids analysis
+
+Following the heatmap analysis where we were able to asses that there
+is in fact some structure in the data. We considered using the
+partition around medoids clustering strategy, where the only parameter
+that is needed to tune is the number of clusters. Therefore, we
+clustered the data considering k between 2 and 15.
+
+
+```{r setup, include =FALSE,echo = FALSE,eval=TRUE}
+
+rm(list = ls())
+graphics.off()
+
+library(ggplot2)
+library(data.table)
+library(RColorBrewer)
+library(reshape2)
+library(broom)
+library(grid)
+library(gridExtra)
+library(cluster)
+library(GenomicRanges)
+library(gtable)
+
+library(knitr)
+opts_knit$set(root.dir=normalizePath('../'))
+opts_chunk$set(fig.path = "../figures/pam_clusters/")
+
+## loads binary matrices + functions to generate them
+load("../data/ranges/all_EBV_GenomicRanges.RData")
+load("../data/RData/pam_clusters.RData")
+
+source("../R/heatmap_functions.R")
+
+peaks = c("EBNA2","EBNA3A","EBNA3B","EBNA3C","RBPJ")
+pattern = c("EBNA","RBPJ","H?K","Dnase","H2Z")
+
+cols_to_remove <- function(patterns,set)
+{
+  ll = lapply(pattern,FUN = grepl_cmd,set)
+  n = length(ll)
+  ll = as.list(paste0(ll,c(rep("&",n-1),"")))
+  return(do.call(paste0,ll))
+}
+
+get_names <- function(range_data) return(names(range_data@elementMetadata@listData))
+
+grepl_cmd <- function(variable,set)
+{
+return(paste0("!grepl(",change_to_str_val(variable),",",set,")",sep =""))
+}
+
+change_to_str_val <- function(str) return(paste0("'",str,"'"))
+
+mc = 8
+
+```
+
+
+
+```{r mats,include=FALSE,eval=TRUE,echo=FALSE}
+
+mats <- mcmapply(build_binary_matrix, names(ranges),ranges,
+  MoreArgs = list(expr = "Dnase == 1",
+             col_expr = cols_to_remove(pattern,'columns')),
+			 SIMPLIFY=FALSE,mc.silent=TRUE,mc.cores = mc)
+
+mats <- mats[peaks]
+
+join_clusters <- lapply(clusters,function(x){
+  out = lapply(x,function(y)y[,k:=max(cluster)])
+  return(do.call(rbind,out))})
+	
+join_clusters <- mapply(function(x,y){
+  x[,set:=y]
+  return(x)},join_clusters,names(join_clusters),SIMPLIFY=FALSE)
+
+join_clusters <- do.call(rbind,join_clusters)
+
+
+```
+
+If we make boxplots of the silhouette index for each point and
+separate them by number of clusters and dataset, we can see that the
+biggest separation is occuring when there are two clusters, which
+agrees with the heatmaps. When using a higher number of clusters we
+can see that the range of the boxplots stabilizes:
+
+
+```{r silhouette_idx ,fig.width=12,fig.heigth=6,dpi=300,echo=FALSE}
+ggplot(join_clusters,aes(as.factor(k),width,colour = set))+
+  geom_boxplot()+facet_grid(set~.)
+  scale_color_brewer(palette  ="Set1")+theme(legend.position = "none")+
+  xlab("Number of clusters")+ylab("Silhouette index")
+```
+
+The median silhouette index for each k behaves as:
+
+```{r median_sil,fig.width=10,fig.heigth=6,dpi=200,echo=FALSE}
+med <- join_clusters[,median(width),by=.(k,set)]
+setnames(med,names(med),c("k","set","width"))
+ggplot(med,aes(k,width,colour=set))+geom_line(size=1)+
+  scale_color_brewer(palette = "Set1",name = "")+
+  xlab("number of clusters")+ylab("median silhouette index")+
+  scale_x_continous(breaks = 2:15)
+```
+
+
+
+
+
+
+
+
+
+
