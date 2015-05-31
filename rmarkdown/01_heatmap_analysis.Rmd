@@ -83,7 +83,7 @@ top <- 10
 ```
 We can see that the top `r top`, TFs are for each dataset:
 
-```{r topdata,include=TRUE,echo=FALSE,eval=TRUE,results='markup'}
+```{r topdata,include=TRUE,echo=FALSE,eval=TRUE,results='markup',warning = FALSE}
 
 tab <- lapply(dts,function(x,top){
   y = copy(x)
@@ -127,8 +127,6 @@ propPlots[[4]] + ggtitle("EBNA3C")
 propPlots[[7]] + ggtitle("RBPJ")
 
 ```
-
-
 
 
 

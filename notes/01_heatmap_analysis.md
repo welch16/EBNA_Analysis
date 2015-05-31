@@ -26,19 +26,6 @@ proportions <- lapply(mats,get_proportions)
 We can see that the top 10, TFs are for each dataset:
 
 
-```
-## Warning in if (is.na(row.names)) row.names = !is.null(rownames(x)) && !
-## identical(rownames(x), : the condition has length > 1 and only the first
-## element will be used
-```
-
-```
-## Warning in if (row.names) {: the condition has length > 1 and only the
-## first element will be used
-```
-
-
-
 |   |EBNA2  |EBNA3A |EBNA3B |EBNA3C |JK92   |JK234 |RBPJ   |
 |:--|:------|:------|:------|:------|:------|:-----|:------|
 |1  |RUNX3  |RUNX3  |RUNX3  |RUNX3  |RUNX3  |EBF1  |RUNX3  |
@@ -61,8 +48,6 @@ coincide. In particular RUNX3, EBF1, PAX5, etc.
 If we calculate the proportions of each TF, and sort them we can get the following:
 
 ![plot of chunk proportions_dnaseFilter](../figures/heatmaps/proportions_dnaseFilter-1.png) ![plot of chunk proportions_dnaseFilter](../figures/heatmaps/proportions_dnaseFilter-2.png) ![plot of chunk proportions_dnaseFilter](../figures/heatmaps/proportions_dnaseFilter-3.png) ![plot of chunk proportions_dnaseFilter](../figures/heatmaps/proportions_dnaseFilter-4.png) ![plot of chunk proportions_dnaseFilter](../figures/heatmaps/proportions_dnaseFilter-5.png) 
-
-
 
 
 

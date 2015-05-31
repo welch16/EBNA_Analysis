@@ -15,3 +15,6 @@ notes/%.md:rmarkdown/%.Rmd
 
 data/ranges/all_EBV_GenomicRanges.RData:
 	R CMD BATCH scripts/create_GRanges_EBV.R
+
+data/RData/pam_clusters.RData:
+	R CMD BATCH scripts/calculate_pam_cluster.R
