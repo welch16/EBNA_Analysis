@@ -23,16 +23,23 @@ can see that the range of the boxplots stabilizes:
 
 ![plot of chunk silhouette_idx ](../figures/pam_clusters/silhouette_idx -1.png) 
 
-```
-## Error in scale_color_brewer(palette = "Set1") + theme(legend.position = "none") + : non-numeric argument to binary operator
-```
-
 The median silhouette index for each k behaves as:
 
+![plot of chunk median_sil](../figures/pam_clusters/median_sil-1.png) 
 
-```
-## Error in eval(expr, envir, enclos): could not find function "scale_x_continous"
-```
+
+
+In this case, since we see a decreasing tendency in the silhouette
+index, and we want to consider a greater selection of clusters than
+two, we consider K=6. So, we consider that amount of clusters and
+calculate the number proportions of peaks overlapping a specific
+transcription factor per cluster.
+
+
+
+
+
+![plot of chunk propotions](../figures/pam_clusters/propotions-1.png) ![plot of chunk propotions](../figures/pam_clusters/propotions-2.png) ![plot of chunk propotions](../figures/pam_clusters/propotions-3.png) ![plot of chunk propotions](../figures/pam_clusters/propotions-4.png) ![plot of chunk propotions](../figures/pam_clusters/propotions-5.png) 
 
 
 

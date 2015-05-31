@@ -91,7 +91,7 @@ can see that the range of the boxplots stabilizes:
 
 ```{r silhouette_idx ,fig.width=12,fig.heigth=6,dpi=300,echo=FALSE}
 ggplot(join_clusters,aes(as.factor(k),width,colour = set))+
-  geom_boxplot()+facet_grid(set~.)
+  geom_boxplot()+facet_grid(set~.)+
   scale_color_brewer(palette  ="Set1")+theme(legend.position = "none")+
   xlab("Number of clusters")+ylab("Silhouette index")
 ```
@@ -104,7 +104,73 @@ setnames(med,names(med),c("k","set","width"))
 ggplot(med,aes(k,width,colour=set))+geom_line(size=1)+
   scale_color_brewer(palette = "Set1",name = "")+
   xlab("number of clusters")+ylab("median silhouette index")+
-  scale_x_continous(breaks = 2:15)
+  scale_x_continuous(breaks = 2:15)
+rm(med)
+```
+
+```{r nclusters,include=FALSE,echo=FALSE,eval=TRUE}
+K <- 6
+pam_clust <- mclapply(mats,pam,K,mc.cores = mc,mc.preschedule = TRUE)
+```
+
+In this case, since we see a decreasing tendency in the silhouette
+index, and we want to consider a greater selection of clusters than
+two, we consider K=`r K`. So, we consider that amount of clusters and
+calculate the number proportions of peaks overlapping a specific
+transcription factor per cluster.
+
+
+```{r cluster_prop,include=FALSE,echo=FALSE,eval=TRUE}
+mats_dt <- lapply(mats,data.table)
+mats_dt <- mapply(function(x,y){
+  x[,clustering:=y$clustering]
+  return(x)},mats_dt,pam_clust,SIMPLIFY=FALSE)
+melt_mats <- lapply(mats_dt,melt,id.vars="clustering")
+
+melt_mat <- mapply(function(x,y){
+  x[,set:=y]
+  return(x)},melt_mats,names(melt_mats),SIMPLIFY=FALSE)
+melt_mat <- do.call(rbind,melt_mat)
+
+props <- melt_mat[,mean(value), by=.(clustering,variable,set)]
+lengths <- melt_mat[,length(value),by=.(clustering,variable,set)][,(V1)]
+
+props[,group:=paste(lengths,"peaks")]
+  
+  
+clust_plot <- function(data,S,clust)
+{
+dt <- data[clustering == clust & set == S]
+p <- ggplot(dt,aes(reorder(variable,-V1),V1))+
+  geom_bar(stat = "identity",width=.8)+
+  theme(axis.text.x = element_text(angle = 90,size = 3))+xlab("Transcription factor")+ylab("Cluster proportion")+
+  facet_wrap(~group)
+
+return(p)
+  
+}
+
+prop_plots = lapply(peaks,function(i,K,data)
+  lapply(1:K,function(j,peak,data)clust_plot(data,peak,j),i,data),
+  K,props)
+
+arrange_plot <- function(pp,nrow,set)
+{
+  args.list <- c(pp,nrow,set)
+  names(args.list) <- c(paste0("p",1:length(pp)),"nrow","main")
+  do.call(grid.arrange,args.list)
+}
+
+
+```
+
+
+```{r propotions,include=TRUE,echo=FALSE,fig.width=12,fig.heigth=8,dpi=800}
+arrange_plot(prop_plots[[1]],2,"EBNA2")
+arrange_plot(prop_plots[[2]],2,"EBNA3A")
+arrange_plot(prop_plots[[3]],2,"EBNA3B")
+arrange_plot(prop_plots[[4]],2,"EBNA3C")
+arrange_plot(prop_plots[[5]],2,"RBPJ")
 ```
 
 
