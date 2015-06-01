@@ -101,8 +101,8 @@ setnames(cut_prop,names(cut_prop),c("clustering","variable","set","prop","group"
 
 ```{r incidence_mats,include=FALSE,echo=FALSE,eval=TRUE}
 
-top_hm <- gg_heatmap(build_integrative_mat(top_prop))
-cut_hm <- gg_heatmap(build_integrative_mat(cut_prop))
+top_hm <- gg_heatmap(build_integrative_mat(top_prop),row.names=TRUE)
+cut_hm <- gg_heatmap(build_integrative_mat(cut_prop),row.names=TRUE)
 
 ```
 
@@ -129,3 +129,4 @@ print_hm(top_hm)
 print_hm(cut_hm)
 
 ```
+

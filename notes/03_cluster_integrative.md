@@ -29,3 +29,4 @@ That way we built two different indidence matrix:
    respect the peaks in the cluster is greater than 75%.
 
 ![plot of chunk hm_cut ](../figures/cluster_integrative/hm_cut -1.png) 
+

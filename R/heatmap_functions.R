@@ -34,7 +34,7 @@ function(mat)
   return(sort(colSums(mat) / dim(mat)[1],decreasing = TRUE))
 }
 
-gg_heatmap <- function(mat,title = NULL)
+gg_heatmap <- function(mat,row.names = FALSE,title = NULL)
 {
 
   hh = hclust(dist(mat))
@@ -57,15 +57,17 @@ gg_heatmap <- function(mat,title = NULL)
 
   p1 <- ggplot(df,aes(Var2,Var1))+geom_tile(aes(fill= factor(value)))+
     scale_y_discrete(expand = c(0,0))+scale_x_discrete(expand = c(0,0))+
-      labs(x="",y="")+theme(legend.position = "bottom",
-      axis.ticks = element_blank(),axis.text.y = element_blank())+
+      labs(x="",y="")+theme(legend.position = "bottom")+
       theme(axis.text.x = element_text(angle = -90,size= 6.2,hjust= 0),
-            plot.margin = unit(c(0,1,.5,1),"cm"),
-            axis.ticks.y = element_blank())+
+            axis.text.y = element_text(size = 6.2),
+            plot.margin = unit(c(0,1,.5,1),"cm"))+
       scale_fill_manual(name = "Overlap",values = c("lightblue","navyblue"),labels = c("no","yes"))+
       scale_x_discrete(expand = c(0, 0)) + scale_y_discrete(expand = c(0, 0))
   
-
+  if(!row.names){
+    p1 <- p1 + theme(axis.ticks = element_blank(),axis.text.y = element_blank(),axis.ticks.y = element_blank())
+  }
+  
   ddata_y <- dendro_data(vv1)
 
   ### Set up a blank theme
