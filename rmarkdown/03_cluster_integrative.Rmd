@@ -1,5 +1,5 @@
 
->## Partition around medoids analysis
+## Integrative cluster analysis
 
 ```{r setup, include =FALSE,echo = FALSE,eval=TRUE}
 
@@ -101,32 +101,137 @@ setnames(cut_prop,names(cut_prop),c("clustering","variable","set","prop","group"
 
 ```{r incidence_mats,include=FALSE,echo=FALSE,eval=TRUE}
 
-top_hm <- gg_heatmap(build_integrative_mat(top_prop),row.names=TRUE)
-cut_hm <- gg_heatmap(build_integrative_mat(cut_prop),row.names=TRUE)
+top_mat <- build_integrative_mat(top_prop)
+cut_mat <- build_integrative_mat(cut_prop)
+top_hm <- gg_heatmap(top_mat,row.names=TRUE)
+cut_hm <- gg_heatmap(cut_mat,row.names=TRUE)
 
 ```
 
-That way we built two different indidence matrix:
+That way we can build two different incidence matrices.
 
 1. One where the rows represent one of the `r K` clusters of each
    dataset (i.e. `r length(peaks)*K` rows) and the columns are the
    union of the top `r top` TFs for each peaksets.
-
-```{r hm_top ,fig.width=6,fig.heigth=8,dpi=120,echo=FALSE}
-
-print_hm(top_hm)
-
-```
-   
+  
 2. Again the rows represent one of the `r K` clusters of each datasets
    (excepting the clusters where there are not TFs such that its
    overlap frequency is greater `r cutline*100`%). And the columns
    represent the union of all TFs such that its overlapping frequency
    respect the peaks in the cluster is greater than `r cutline*100`%.
 
+```{r clust_funs,include=FALSE,echo=FALSE,eval=TRUE}
+clust_plot <- function(data,clust)
+{
+dt <- data[clustering == clust]
+p <- ggplot(dt,aes(reorder(variable,-V1),V1))+
+  geom_bar(stat = "identity",width=.8)+
+  theme(axis.text.x = element_text(angle = 90,size = 6))+xlab("TF")+ylab("Cluster prop.")+
+  facet_wrap(~group)+scale_y_continuous(limits = c(0,1))
+
+return(p)
+  
+}
+
+arrange_plot <- function(pp,nrow,set)
+{
+  args.list <- c(pp,nrow,set)
+  names(args.list) <- c(paste0("p",1:length(pp)),"nrow","main")
+  do.call(grid.arrange,args.list)
+}
+
+```
+
+
+   
+### Using the union of the top `r top` TF per cluster as columns
+
+```{r hm_top ,fig.width=6,fig.heigth=8,dpi=120,echo=FALSE}
+
+print_hm(top_hm)
+
+```
+
+- This heatmap divides the drivers as:
+  * EBF1, FOXM1, P300, BCL11A, PAX5, RUNX3, NFIC and ATF2
+  * POL2, CTCF, PU1
+  * TAF1, PML, MXI1, CHD2, ELF1, MAZ, YY1
+  * IRF4, BATF, MTA3, MEF2A
+
+Roughly we can see the rows are partitioned into four groups,
+therefore we can see the cluster presence frequency for the columns of
+the matrix:
+
+```{r top_clusters,include=FALSE,echo=FALSE,eval=TRUE}
+
+p <- 4
+clusters <- cutree(hclust(dist(top_mat)),k=p)
+top_mat <- data.table(top_mat)
+top_mat[,clustering:= clusters]
+top_mat <- melt(top_mat,id.vars = "clustering")
+
+top_props <- top_mat[,mean(value),by=.(clustering,variable)]
+top_lengths <- top_mat[,length(value),by=.(clustering,variable)]
+top_props[,lengths:=top_lengths[,(V1)]]
+top_props[,group:=paste(lengths,"rows")]
+
+rm(top_lengths)
+top_props[,lengths:=NULL]
+
+top_plots <- lapply(1:p,function(j,data)clust_plot(data,j),top_props)
+
+```
+
+```{r top_propotions,include=TRUE,echo=FALSE,fig.width=16,fig.heigth=12,dpi=1000}
+nrow = 2
+arrange_plot(top_plots,nrow,paste("Top",top," peaks strategy"))
+```
+
+
+
+  
+
+### Using the union of the TFs with clustered frequency greater than `r cutline*100`
+
+  
+   
 ```{r hm_cut ,fig.width=6,fig.heigth=8,dpi=120,echo=FALSE}
 
 print_hm(cut_hm)
 
 ```
+
+- This one divides the drivers as:
+  * EBF1, RUNX3, PAX5, BCL11A, ATF2, NFIC, BATF, P300
+  * MAX, TAF1, ELF1, POL2, YY1, MAZ, MXI1
+  * SP1, PML, NFATC1, TBLR1, MEF2A, BCL3, MTA3
+
+In this heatmaps we can see that the rows are divided into 3 segments:
+  
+```{r cut_clusters,include=FALSE,echo=FALSE,eval=TRUE}
+
+p <- 3
+clusters <- cutree(hclust(dist(cut_mat)),k=p)
+cut_mat <- data.table(cut_mat)
+cut_mat[,clustering:= clusters]
+cut_mat <- melt(cut_mat,id.vars = "clustering")
+
+cut_props <- cut_mat[,mean(value),by=.(clustering,variable)]
+cut_lengths <- cut_mat[,length(value),by=.(clustering,variable)]
+cut_props[,lengths:=cut_lengths[,(V1)]]
+cut_props[,group:=paste(lengths,"rows")]
+
+rm(cut_lengths)
+cut_props[,lengths:=NULL]
+
+cut_plots <- lapply(1:p,function(j,data)clust_plot(data,j),top_props)
+
+```
+
+```{r cut_propotions,include=TRUE,echo=FALSE,fig.width=16,fig.heigth=12,dpi=1000}
+nrow = 2
+arrange_plot(cut_plots,nrow,paste("Cut",cutline*100,"% peaks strategy"))
+```
+
+
 
