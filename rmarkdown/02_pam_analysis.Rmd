@@ -1,5 +1,5 @@
 
-### Partition around medoids analysis
+## Partition around medoids analysis
 
 Following the heatmap analysis where we were able to asses that there
 is in fact some structure in the data. We considered using the
@@ -24,6 +24,12 @@ library(cluster)
 library(GenomicRanges)
 library(gtable)
 
+## Analysis parameters
+K <- 10  # number of clusters
+top <- 10 # number of top peaks per cluster
+cutline <- .5 # minimal proportion of TFs regions overlaping with peaks in cluster
+
+
 library(knitr)
 opts_knit$set(root.dir=normalizePath('../'))
 opts_chunk$set(fig.path = "../figures/pam_clusters/")
@@ -33,6 +39,7 @@ load("../data/ranges/all_EBV_GenomicRanges.RData")
 load("../data/RData/pam_clusters.RData")
 
 source("../R/heatmap_functions.R")
+source("../R/clustering_analysis.R")
 
 peaks = c("EBNA2","EBNA3A","EBNA3B","EBNA3C","RBPJ")
 pattern = c("EBNA","RBPJ","H?K","Dnase","H2Z")
@@ -98,7 +105,7 @@ ggplot(join_clusters,aes(as.factor(k),width,colour = set))+
 
 The median silhouette index for each k behaves as:
 
-```{r median_sil,fig.width=10,fig.heigth=6,dpi=200,echo=FALSE}
+```{r median_sil,fig.width=10,fig.heigth=6,dpi=300,echo=FALSE}
 med <- join_clusters[,median(width),by=.(k,set)]
 setnames(med,names(med),c("k","set","width"))
 ggplot(med,aes(k,width,colour=set))+geom_line(size=1)+
@@ -109,7 +116,6 @@ rm(med)
 ```
 
 ```{r nclusters,include=FALSE,echo=FALSE,eval=TRUE}
-K <- 6
 pam_clust <- mclapply(mats,pam,K,mc.cores = mc,mc.preschedule = TRUE)
 ```
 
@@ -117,7 +123,7 @@ In this case, since we see a decreasing tendency in the silhouette
 index, and we want to consider a greater selection of clusters than
 two, we consider K=`r K`. So, we consider that amount of clusters and
 calculate the number proportions of peaks overlapping a specific
-transcription factor per cluster.
+transcription factor per cluster. The barplots of this data are at the bottom.
 
 
 ```{r cluster_prop,include=FALSE,echo=FALSE,eval=TRUE}
@@ -143,8 +149,8 @@ clust_plot <- function(data,S,clust)
 dt <- data[clustering == clust & set == S]
 p <- ggplot(dt,aes(reorder(variable,-V1),V1))+
   geom_bar(stat = "identity",width=.8)+
-  theme(axis.text.x = element_text(angle = 90,size = 3))+xlab("Transcription factor")+ylab("Cluster proportion")+
-  facet_wrap(~group)
+  theme(axis.text.x = element_text(angle = 90,size = 3))+xlab("TF")+ylab("Cluster prop.")+
+  facet_wrap(~group)+scale_y_continuous(limits = c(0,1))
 
 return(p)
   
@@ -164,14 +170,48 @@ arrange_plot <- function(pp,nrow,set)
 
 ```
 
+In the proportion plots at the bottom, it is possible to see which
+transcription factors overlaps with most of the peaks in each
+cluster. For this part, we are going to consider two strategies to
+identify which factors may be the drivers. One is to consider the
+active TFs as the union of the top `r top` TF per cluster, and the
+other is to consider this set as the union of all TFs such that
+overlaps at least the `r cutline*100`% of all the peaks in a cluster.
 
-```{r propotions,include=TRUE,echo=FALSE,fig.width=12,fig.heigth=8,dpi=800}
-arrange_plot(prop_plots[[1]],2,"EBNA2")
-arrange_plot(prop_plots[[2]],2,"EBNA3A")
-arrange_plot(prop_plots[[3]],2,"EBNA3B")
-arrange_plot(prop_plots[[4]],2,"EBNA3C")
-arrange_plot(prop_plots[[5]],2,"RBPJ")
+### Top `r top` strategy
+
+```{r top_peaks, include=TRUE,echo=TRUE,eval=TRUE,results='markup'}
+
+top_TFs <- lapply(peaks,top_strategy,props,top)
+names(top_TFs) <- peaks
+top_TFs
+
 ```
+
+
+### TF overlaps more than `cutline*100`% of peaks in cluster
+
+
+```{r cut_peaks,include=TRUE,echo = TRUE,eval = TRUE,results='markup'}
+cut_TFs <- lapply(peaks,cut_strategy,props,cutline)
+names(cut_TFs) <- peaks
+cut_TFs
+
+```
+
+
+
+### Transcription factor barplots when Dnase == 1 and K=`r K`
+
+```{r propotions,include=TRUE,echo=FALSE,fig.width=16,fig.heigth=12,dpi=1000}
+nrow = 4
+arrange_plot(prop_plots[[1]],nrow,"EBNA2 when Dnase==1")
+arrange_plot(prop_plots[[2]],nrow,"EBNA3A when Dnase==1")
+arrange_plot(prop_plots[[3]],nrow,"EBNA3B when Dnase==1")
+arrange_plot(prop_plots[[4]],nrow,"EBNA3C when Dnase==1")
+arrange_plot(prop_plots[[5]],nrow,"RBPJ when Dnase==1")
+```
+
 
 
 
