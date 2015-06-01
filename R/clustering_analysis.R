@@ -35,3 +35,17 @@ cut_strategy <- function(peak,props,cutline)
   TFs <- as.character(unique(cut_TF[,(variable)]))
   return(TFs)
 }
+
+build_integrative_mat <- function(prop)
+{
+  cols <- unique(prop[,(variable)])
+  prop_loc <- copy(prop)
+  prop_loc[,rows:= paste0(set,"-",clustering)]
+  rows <- unique(prop_loc[,(rows)])
+  mat <- lapply(cols,function(x,rows,prop_loc)
+     ifelse(rows %in% prop_loc[variable == x,(rows)],1,0),rows,prop_loc)
+  mat <- as.matrix(do.call(cbind,mat))
+  colnames(mat) <- cols
+  rownames(mat) <- rows
+  return(mat)
+}
