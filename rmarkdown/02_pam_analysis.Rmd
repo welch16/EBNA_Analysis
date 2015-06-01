@@ -1,4 +1,4 @@
-
+>
 ## Partition around medoids analysis
 
 Following the heatmap analysis where we were able to asses that there
@@ -27,7 +27,7 @@ library(gtable)
 ## Analysis parameters
 K <- 10  # number of clusters
 top <- 10 # number of top peaks per cluster
-cutline <- .5 # minimal proportion of TFs regions overlaping with peaks in cluster
+cutline <- .75 # minimal proportion of TFs regions overlaping with peaks in cluster
 
 
 library(knitr)
@@ -180,6 +180,15 @@ overlaps at least the `r cutline*100`% of all the peaks in a cluster.
 
 ### Top `r top` strategy
 
+For each peak set, we obtain the top `r top` TFs in each cluster,
+bellow the union of all drivers in a cluster are shown.
+
+We can see that despite having more than 70 TFs, it seem that there
+are some drivers which are repetitive in all peak sets. On the other
+hand, it seems that there are some drivers that are peak set
+exclusive.
+
+
 ```{r top_peaks, include=TRUE,echo=TRUE,eval=TRUE,results='markup'}
 
 top_TFs <- lapply(peaks,top_strategy,props,top)
@@ -188,8 +197,15 @@ top_TFs
 
 ```
 
+In particlar the top `r top` TFs that are common to all peak sets are:
 
-### TF overlaps more than `cutline*100`% of peaks in cluster
+```{r top_common,include=TRUE,echo=TRUE,eval=TRUE,results='markup'}
+Reduce(intersect,top_TFs)
+```
+
+
+
+### TF overlaps more than `r cutline*100`% of peaks in cluster
 
 
 ```{r cut_peaks,include=TRUE,echo = TRUE,eval = TRUE,results='markup'}
@@ -199,6 +215,12 @@ cut_TFs
 
 ```
 
+The common TFs with a cluster specfic overlap proportion greater thatn
+`r cutline` are:
+
+```{r cut_common,include=TRUE,echo=TRUE,eval=TRUE,results='markup'}
+Reduce(intersect,cut_TFs)
+```
 
 
 ### Transcription factor barplots when Dnase == 1 and K=`r K`
@@ -211,14 +233,4 @@ arrange_plot(prop_plots[[3]],nrow,"EBNA3B when Dnase==1")
 arrange_plot(prop_plots[[4]],nrow,"EBNA3C when Dnase==1")
 arrange_plot(prop_plots[[5]],nrow,"RBPJ when Dnase==1")
 ```
-
-
-
-
-
-
-
-
-
-
 

@@ -1,4 +1,4 @@
-
+>
 ## Partition around medoids analysis
 
 Following the heatmap analysis where we were able to asses that there
@@ -44,9 +44,18 @@ cluster. For this part, we are going to consider two strategies to
 identify which factors may be the drivers. One is to consider the
 active TFs as the union of the top 10 TF per cluster, and the
 other is to consider this set as the union of all TFs such that
-overlaps at least the 50% of all the peaks in a cluster.
+overlaps at least the 75% of all the peaks in a cluster.
 
 ### Top 10 strategy
+
+For each peak set, we obtain the top 10 TFs in each cluster,
+bellow the union of all drivers in a cluster are shown.
+
+We can see that despite having more than 70 TFs, it seem that there
+are some drivers which are repetitive in all peak sets. On the other
+hand, it seems that there are some drivers that are peak set
+exclusive.
+
 
 
 ```r
@@ -88,8 +97,22 @@ top_TFs
 ## [22] "NFIC"   "BCL11A" "BCL3"   "MEF2A"  "IRF4"   "MTA3"
 ```
 
+In particlar the top 10 TFs that are common to all peak sets are:
 
-### TF overlaps more than `cutline*100`% of peaks in cluster
+
+```r
+Reduce(intersect,top_TFs)
+```
+
+```
+##  [1] "POL2"   "ELF1"   "YY1"    "RUNX3"  "NFIC"   "EBF1"   "ATF2"  
+##  [8] "PAX5"   "BCL11A" "P300"   "FOXM1"  "BATF"   "IRF4"   "POU2F2"
+## [15] "SP1"    "MTA3"   "CTCF"
+```
+
+
+
+### TF overlaps more than 75% of peaks in cluster
 
 
 
@@ -101,66 +124,61 @@ cut_TFs
 
 ```
 ## $EBNA2
-##  [1] "ATF2"    "BATF"    "BCL11A"  "BCL3"    "BCLAF1"  "BHLHE40" "CEBPB"  
-##  [8] "CHD1"    "CHD2"    "CTCF"    "EBF1"    "EGR1"    "ELF1"    "ETS1"   
-## [15] "FOXM1"   "GABP"    "IRF4"    "MAX"     "MAZ"     "MEF2A"   "MEF2C"  
-## [22] "MTA3"    "MXI1"    "NFATC1"  "NFIC"    "P300"    "PAX3"    "PAX5"   
-## [29] "PML"     "POL2"    "POU2F2"  "PU.1"    "RAD21"   "RUNX3"   "SIN3"   
-## [36] "SIX5"    "SMC3"    "SP1"     "SRF"     "STAT3"   "STAT5"   "TAF1"   
-## [43] "TBLR1"   "TBP"     "TCF12"   "TCF3"    "USF2"    "WHIP"    "YY1"    
-## [50] "ZEB1"    "ZNF143" 
+##  [1] "ATF2"    "BATF"    "BCL11A"  "BCL3"    "BCLAF1"  "BHLHE40" "CHD2"   
+##  [8] "EBF1"    "EGR1"    "ELF1"    "FOXM1"   "GABP"    "IRF4"    "MAX"    
+## [15] "MAZ"     "MEF2A"   "MTA3"    "MXI1"    "NFATC1"  "NFIC"    "P300"   
+## [22] "PAX5"    "PML"     "POL2"    "POU2F2"  "RUNX3"   "SIN3"    "SP1"    
+## [29] "TAF1"    "TBLR1"   "TBP"     "TCF12"   "TCF3"    "WHIP"    "YY1"    
 ## 
 ## $EBNA3A
-##  [1] "ATF2"    "BATF"    "BCL11A"  "BCL3"    "BCLAF1"  "BHLHE40" "c.FOS"  
-##  [8] "CEBPB"   "CHD1"    "CHD2"    "CTCF"    "EBF1"    "EGR1"    "ELF1"   
-## [15] "FOXM1"   "GABP"    "IRF4"    "JUND"    "MAX"     "MAZ"     "MEF2A"  
-## [22] "MEF2C"   "MTA3"    "MXI1"    "NFATC1"  "NFIC"    "NFYA"    "NFYB"   
-## [29] "NRF1"    "P300"    "PAX3"    "PAX5"    "PML"     "POL2"    "POU2F2" 
-## [36] "PU.1"    "RAD21"   "RFX5"    "RUNX3"   "SIN3"    "SIX5"    "SMC3"   
-## [43] "SP1"     "SRF"     "STAT3"   "STAT5"   "TAF1"    "TBLR1"   "TBP"    
-## [50] "TCF12"   "TCF3"    "USF1"    "USF2"    "WHIP"    "YY1"     "ZNF143" 
+##  [1] "ATF2"    "BATF"    "BCL11A"  "BCL3"    "BHLHE40" "c.FOS"   "CEBPB"  
+##  [8] "CHD2"    "EBF1"    "EGR1"    "ELF1"    "FOXM1"   "IRF4"    "MAX"    
+## [15] "MAZ"     "MEF2A"   "MEF2C"   "MTA3"    "MXI1"    "NFATC1"  "NFIC"   
+## [22] "NFYB"    "NRF1"    "P300"    "PAX3"    "PAX5"    "PML"     "POL2"   
+## [29] "POU2F2"  "RUNX3"   "SIN3"    "SP1"     "STAT5"   "TAF1"    "TBLR1"  
+## [36] "TBP"     "TCF12"   "TCF3"    "USF2"    "YY1"    
 ## 
 ## $EBNA3B
 ##  [1] "ATF2"    "BATF"    "BCL11A"  "BCL3"    "BCLAF1"  "BHLHE40" "CEBPB"  
-##  [8] "CHD1"    "CHD2"    "CTCF"    "EBF1"    "EGR1"    "ELF1"    "FOXM1"  
-## [15] "GABP"    "IRF4"    "MAX"     "MAZ"     "MEF2A"   "MEF2C"   "MTA3"   
-## [22] "MXI1"    "NFATC1"  "NFIC"    "NRF1"    "P300"    "PAX3"    "PAX5"   
-## [29] "PML"     "POL2"    "POU2F2"  "PU.1"    "RAD21"   "RUNX3"   "SIN3"   
-## [36] "SMC3"    "SP1"     "SRF"     "STAT3"   "STAT5"   "TAF1"    "TBLR1"  
-## [43] "TBP"     "TCF12"   "TCF3"    "WHIP"    "YY1"    
+##  [8] "CHD2"    "EBF1"    "EGR1"    "ELF1"    "FOXM1"   "IRF4"    "MAX"    
+## [15] "MAZ"     "MEF2A"   "MEF2C"   "MTA3"    "MXI1"    "NFATC1"  "NFIC"   
+## [22] "NRF1"    "P300"    "PAX5"    "PML"     "POL2"    "POU2F2"  "RUNX3"  
+## [29] "SP1"     "STAT3"   "STAT5"   "TAF1"    "TBLR1"   "TBP"     "TCF12"  
+## [36] "TCF3"    "YY1"    
 ## 
 ## $EBNA3C
 ##  [1] "ATF2"    "BATF"    "BCL11A"  "BCL3"    "BCLAF1"  "BHLHE40" "CEBPB"  
-##  [8] "CHD1"    "CHD2"    "CTCF"    "EBF1"    "EGR1"    "ELF1"    "FOXM1"  
-## [15] "IRF4"    "JUND"    "MAX"     "MAZ"     "MEF2A"   "MEF2C"   "MTA3"   
-## [22] "MXI1"    "NFATC1"  "NFIC"    "P300"    "PAX3"    "PAX5"    "PML"    
-## [29] "POL2"    "POU2F2"  "PU.1"    "RAD21"   "RUNX3"   "RXRA"    "SMC3"   
-## [36] "SP1"     "SRF"     "STAT3"   "STAT5"   "TAF1"    "TBLR1"   "TBP"    
-## [43] "TCF12"   "TCF3"    "WHIP"    "YY1"    
+##  [8] "CHD2"    "CTCF"    "EBF1"    "EGR1"    "FOXM1"   "IRF4"    "MAZ"    
+## [15] "MEF2A"   "MEF2C"   "MTA3"    "MXI1"    "NFATC1"  "NFIC"    "P300"   
+## [22] "PAX5"    "PML"     "POL2"    "POU2F2"  "RAD21"   "RUNX3"   "SMC3"   
+## [29] "SP1"     "STAT3"   "STAT5"   "TBLR1"   "TBP"     "TCF12"   "TCF3"   
+## [36] "YY1"    
 ## 
 ## $RBPJ
-##  [1] "ATF2"    "ATF3"    "BATF"    "BCL11A"  "BCL3"    "BCLAF1"  "BHLHE40"
-##  [8] "CEBPB"   "CHD2"    "CTCF"    "EBF1"    "EGR1"    "ELF1"    "FOXM1"  
-## [15] "GABP"    "IRF4"    "MAX"     "MAZ"     "MEF2A"   "MEF2C"   "MTA3"   
-## [22] "MXI1"    "NFATC1"  "NFIC"    "NRF1"    "P300"    "PAX5"    "PML"    
-## [29] "POL2"    "POU2F2"  "PU.1"    "RAD21"   "RUNX3"   "SIN3"    "SIX5"   
-## [36] "SMC3"    "SP1"     "SRF"     "STAT3"   "STAT5"   "TAF1"    "TBLR1"  
-## [43] "TBP"     "TCF12"   "TCF3"    "WHIP"    "YY1"
+##  [1] "ATF2"    "BATF"    "BCL11A"  "BCL3"    "BHLHE40" "CHD2"    "CTCF"   
+##  [8] "EBF1"    "ELF1"    "FOXM1"   "IRF4"    "MAX"     "MAZ"     "MEF2A"  
+## [15] "MTA3"    "MXI1"    "NFATC1"  "NFIC"    "P300"    "PAX5"    "PML"    
+## [22] "POL2"    "POU2F2"  "RUNX3"   "SIN3"    "SIX5"    "SP1"     "SRF"    
+## [29] "TAF1"    "TBLR1"   "TBP"     "TCF12"   "TCF3"    "YY1"
 ```
 
+The common TFs with a cluster specfic overlap proportion greater thatn
+0.75 are:
+
+
+```r
+Reduce(intersect,cut_TFs)
+```
+
+```
+##  [1] "ATF2"    "BATF"    "BCL11A"  "BCL3"    "BHLHE40" "CHD2"    "EBF1"   
+##  [8] "FOXM1"   "IRF4"    "MAZ"     "MEF2A"   "MTA3"    "MXI1"    "NFATC1" 
+## [15] "NFIC"    "P300"    "PAX5"    "PML"     "POL2"    "POU2F2"  "RUNX3"  
+## [22] "SP1"     "TBLR1"   "TBP"     "TCF12"   "TCF3"    "YY1"
+```
 
 
 ### Transcription factor barplots when Dnase == 1 and K=10
 
 ![plot of chunk propotions](../figures/pam_clusters/propotions-1.png) ![plot of chunk propotions](../figures/pam_clusters/propotions-2.png) ![plot of chunk propotions](../figures/pam_clusters/propotions-3.png) ![plot of chunk propotions](../figures/pam_clusters/propotions-4.png) ![plot of chunk propotions](../figures/pam_clusters/propotions-5.png) 
-
-
-
-
-
-
-
-
-
-
 

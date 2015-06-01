@@ -1,0 +1,131 @@
+
+>## Partition around medoids analysis
+
+```{r setup, include =FALSE,echo = FALSE,eval=TRUE}
+
+rm(list = ls())
+graphics.off()
+
+library(ggplot2)
+library(data.table)
+library(RColorBrewer)
+library(reshape2)
+library(ggdendro)
+library(broom)
+library(grid)
+library(gridExtra)
+library(cluster)
+library(GenomicRanges)
+library(gtable)
+
+## Analysis parameters
+K <- 10  # number of clusters
+top <- 10 # number of top peaks per cluster
+cutline <- .75 # minimal proportion of TFs regions overlaping with peaks in cluster
+
+
+library(knitr)
+opts_knit$set(root.dir=normalizePath('../'))
+opts_chunk$set(fig.path = "../figures/cluster_integrative/")
+
+## loads binary matrices + functions to generate them
+load("../data/ranges/all_EBV_GenomicRanges.RData")
+load("../data/RData/pam_clusters.RData")
+
+source("../R/heatmap_functions.R")
+source("../R/clustering_analysis.R")
+
+peaks = c("EBNA2","EBNA3A","EBNA3B","EBNA3C","RBPJ")
+pattern = c("EBNA","RBPJ","H?K","Dnase","H2Z")
+
+cols_to_remove <- function(patterns,set)
+{
+  ll = lapply(pattern,FUN = grepl_cmd,set)
+  n = length(ll)
+  ll = as.list(paste0(ll,c(rep("&",n-1),"")))
+  return(do.call(paste0,ll))
+}
+
+get_names <- function(range_data) return(names(range_data@elementMetadata@listData))
+
+grepl_cmd <- function(variable,set)
+{
+return(paste0("!grepl(",change_to_str_val(variable),",",set,")",sep =""))
+}
+
+change_to_str_val <- function(str) return(paste0("'",str,"'"))
+
+mc = 8
+
+mats <- mcmapply(build_binary_matrix, names(ranges),ranges,
+  MoreArgs = list(expr = "Dnase == 1",
+             col_expr = cols_to_remove(pattern,'columns')),
+			 SIMPLIFY=FALSE,mc.silent=TRUE,mc.cores = mc)
+
+mats <- mats[peaks]
+
+```
+
+In the previous analysis we considered clustering the peak set
+specific matrices filtering the regions that didn't overlap DHS and
+then we calculated the frequency of overlapping peaks in a cluster
+with a specific TF. That way, we considered two strategies to
+integrate the clusters of the different peak sets.
+
+
+```{r cluster_prop,include=FALSE,echo=FALSE,eval=TRUE}
+pam_clust <- mclapply(mats,pam,K,mc.cores = mc,mc.preschedule = TRUE)
+
+mats_dt <- lapply(mats,data.table)
+mats_dt <- mapply(function(x,y){
+  x[,clustering:=y$clustering]
+  return(x)},mats_dt,pam_clust,SIMPLIFY=FALSE)
+melt_mats <- lapply(mats_dt,melt,id.vars="clustering")
+
+melt_mat <- mapply(function(x,y){
+  x[,set:=y]
+  return(x)},melt_mats,names(melt_mats),SIMPLIFY=FALSE)
+melt_mat <- do.call(rbind,melt_mat)
+
+props <- melt_mat[,mean(value), by=.(clustering,variable,set)]
+lengths <- melt_mat[,length(value),by=.(clustering,variable,set)][,(V1)]
+
+props[,group:=paste(lengths,"peaks")]
+  
+top_prop <- props[,top_k(V1,variable,top),by=.(set,clustering)]
+setnames(top_prop,names(top_prop),c("set","clustering","prop","variable"))
+cut_prop <- props[V1 >= cutline]
+setnames(cut_prop,names(cut_prop),c("clustering","variable","set","prop","group"))
+
+```
+
+```{r incidence_mats,include=FALSE,echo=FALSE,eval=TRUE}
+
+top_hm <- gg_heatmap(build_integrative_mat(top_prop))
+cut_hm <- gg_heatmap(build_integrative_mat(cut_prop))
+
+```
+
+That way we built two different indidence matrix:
+
+1. One where the rows represent one of the `r K` clusters of each
+   dataset (i.e. `r length(peaks)*K` rows) and the columns are the
+   union of the top `r top` TFs for each peaksets.
+
+```{r hm_top ,fig.width=6,fig.heigth=8,dpi=120,echo=FALSE}
+
+print_hm(top_hm)
+
+```
+   
+2. Again the rows represent one of the `r K` clusters of each datasets
+   (excepting the clusters where there are not TFs such that its
+   overlap frequency is greater `r cutline*100`%). And the columns
+   represent the union of all TFs such that its overlapping frequency
+   respect the peaks in the cluster is greater than `r cutline*100`%.
+
+```{r hm_cut ,fig.width=6,fig.heigth=8,dpi=120,echo=FALSE}
+
+print_hm(cut_hm)
+
+```
