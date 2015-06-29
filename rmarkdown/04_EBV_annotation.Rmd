@@ -1,0 +1,90 @@
+
+## EBNA annotation
+
+Previously we annotated the curated EBV (EBNA2, EBNA3's and RBPJ)
+peaklists to the following regions in the genome:
+
+- gene - regions in the gene body of the genome
+
+- 5p1 and 3p1 - regions such that the distance to the nearest genes to
+  the 5' or 3' directions of the genes respectively are between 1 and 1,999 bp
+
+- 5p2 and 3p2 - similarly as above but the distance is between 2k and 9,999 bp
+
+- 5d and 3d - similar and the distance are between 10k and 100k
+
+- gd - The rest of the genome
+
+```{r init,include=FALSE,echo=FALSE,eval = TRUE}
+
+library(knitr)
+opts_knit$set(root.dir=normalizePath('../'))
+opts_chunk$set(fig.path = "../figures/EBV_annots/")
+
+library(GenomicRanges)
+library(data.table)
+library(ggplot2)
+library(RColorBrewer)
+library(reshape2)
+
+load("../data/RData/annotation.RData")
+
+```
+
+Trying not to make a different annotation, we partitioned the genome
+into the following regions:
+
+- Promoters - which are the region that are 2k bp upstream from the
+  reduced intervals in the gene body defined with the genes in [the
+  last hg19 gencode
+  annotation](http://www.gencodegenes.org/releases/19.html). This
+  correspond to 5p1 in the annotation above.
+
+- Gene Body - this are regions in the genome that overlaps any of the
+  genes in the last [hg19 gencode
+  database](http://www.gencodegenes.org/releases/19.html), but don't
+  overlap any of the regions previouly defined as promoters. This
+  correspond to gene in the annotation above.
+ 
+- Integenic regions - Rest of the genome. This corresponds to the rest
+
+```{r separate,include=FALSE,echo=FALSE,eval=TRUE}
+
+tests <- out[[1]]
+whole <- out[[2]]
+
+```
+
+The whole genome frequencies were estimated as the ratio between the
+number of bp in region (as defined above) and genome length, and the
+region probabilities are defined as the number of labelled peaks
+divided by total number of peaks following:
+
+- Promoters - 5p1
+- Gene body - gene
+- Intergenic - rest
+
+
+```{r whole , include= TRUE,echo =FALSE,eval = TRUE,fig.width=4,fig.height=4,out.width=600,dpi=400}
+ggplot(whole[!sample %in% c("JK92","JK234")] ,aes(sample , probs,fill = sample))+
+  geom_bar(stat = "identity")+facet_grid( . ~ lab)+scale_fill_brewer(palette = "Set1")+
+  theme(legend.position = "none",axis.text.x = element_text(angle = 90))+xlab("")+ylab("")
+```
+
+The estimated probabilites are given as:
+
+```{r probs,include=TRUE,echo = FALSE,eval=TRUE,results='markup'}
+
+kable(dcast.data.table( sample ~ lab,data = whole , value.var = "probs"),digits=4) 
+
+```
+
+Clearly all estimated probabilities are significantly different from
+the whole genome probabilities:
+
+```{r tests,include=TRUE,echo=FALSE,eval=TRUE,results='markup'}
+lapply(tests,function(x)x$test)
+```
+
+
+

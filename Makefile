@@ -18,3 +18,6 @@ data/ranges/all_EBV_GenomicRanges.RData:
 
 data/RData/pam_clusters.RData:
 	R CMD BATCH scripts/calculate_pam_cluster.R
+
+data/RData/annotation.RData:
+	R CMD BATCH scripts/annotate_EBV.R
