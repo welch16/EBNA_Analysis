@@ -20,6 +20,7 @@ peaklists to the following regions in the genome:
 library(knitr)
 opts_knit$set(root.dir=normalizePath('../'))
 opts_chunk$set(fig.path = "../figures/EBV_annots/")
+opts_knit$set(out.format='markwdown')
 
 library(GenomicRanges)
 library(data.table)
@@ -85,6 +86,5 @@ the whole genome probabilities:
 ```{r tests,include=TRUE,echo=FALSE,eval=TRUE,results='markup'}
 lapply(tests,function(x)x$test)
 ```
-
 
 
