@@ -11,7 +11,7 @@ peaklists to the following regions in the genome:
 
 - 5p2 and 3p2 - similarly as above but the distance is between 2k and 9,999 bp
 
-- 5d and 3d - similar and the distance are between 10k and 100k
+- 5d and 3d - similarly as abpve but the distance is between 10k and 100k
 
 - gd - The rest of the genome
 
@@ -23,27 +23,25 @@ into the following regions:
 - Promoters - which are the region that are 2k bp upstream from the
   reduced intervals in the gene body defined with the genes in [the
   last hg19 gencode
-  annotation](http://www.gencodegenes.org/releases/19.html). This
-  correspond to 5p1 in the annotation above.
+  annotation](http://www.gencodegenes.org/releases/19.html)
 
 - Gene Body - this are regions in the genome that overlaps any of the
   genes in the last [hg19 gencode
   database](http://www.gencodegenes.org/releases/19.html), but don't
-  overlap any of the regions previouly defined as promoters. This
-  correspond to gene in the annotation above.
+  overlap any of the regions previouly defined as promoters
  
-- Integenic regions - Rest of the genome. This corresponds to the rest
+- Integenic regions - Rest of the genome		
 
 
 
 The whole genome frequencies were estimated as the ratio between the
 number of bp in region (as defined above) and genome length, and the
 region probabilities are defined as the number of labelled peaks
-divided by total number of peaks following:
+divided by total number of peaks following
 
 - Promoters - 5p1
 - Gene body - gene
-- Intergenic - rest
+- Intergenic - the remaining categories
 
 
 <img src="../figures/EBV_annots/whole -1.png" title="plot of chunk whole " alt="plot of chunk whole " width="600" />
@@ -62,8 +60,8 @@ The estimated probabilites are given as:
 |JK234  |    0.4765|     0.4884|   0.0352|
 |RBPJ   |    0.4886|     0.4547|   0.0567|
 
-Clearly all estimated probabilities are significantly different from
-the whole genome probabilities:
+We can see that all estimated probabilities are significantly
+different from the whole genome probabilities:
 
 
 ```

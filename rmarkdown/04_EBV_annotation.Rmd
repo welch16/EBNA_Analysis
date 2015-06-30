@@ -11,7 +11,7 @@ peaklists to the following regions in the genome:
 
 - 5p2 and 3p2 - similarly as above but the distance is between 2k and 9,999 bp
 
-- 5d and 3d - similar and the distance are between 10k and 100k
+- 5d and 3d - similarly as abpve but the distance is between 10k and 100k
 
 - gd - The rest of the genome
 
@@ -38,16 +38,14 @@ into the following regions:
 - Promoters - which are the region that are 2k bp upstream from the
   reduced intervals in the gene body defined with the genes in [the
   last hg19 gencode
-  annotation](http://www.gencodegenes.org/releases/19.html). This
-  correspond to 5p1 in the annotation above.
+  annotation](http://www.gencodegenes.org/releases/19.html)
 
 - Gene Body - this are regions in the genome that overlaps any of the
   genes in the last [hg19 gencode
   database](http://www.gencodegenes.org/releases/19.html), but don't
-  overlap any of the regions previouly defined as promoters. This
-  correspond to gene in the annotation above.
+  overlap any of the regions previouly defined as promoters
  
-- Integenic regions - Rest of the genome. This corresponds to the rest
+- Integenic regions - Rest of the genome		
 
 ```{r separate,include=FALSE,echo=FALSE,eval=TRUE}
 
@@ -59,11 +57,11 @@ whole <- out[[2]]
 The whole genome frequencies were estimated as the ratio between the
 number of bp in region (as defined above) and genome length, and the
 region probabilities are defined as the number of labelled peaks
-divided by total number of peaks following:
+divided by total number of peaks following
 
 - Promoters - 5p1
 - Gene body - gene
-- Intergenic - rest
+- Intergenic - the remaining categories
 
 
 ```{r whole , include= TRUE,echo =FALSE,eval = TRUE,fig.width=4,fig.height=4,out.width=600,dpi=400}
@@ -80,8 +78,8 @@ kable(dcast.data.table( sample ~ lab,data = whole , value.var = "probs"),format=
 
 ```
 
-Clearly all estimated probabilities are significantly different from
-the whole genome probabilities:
+We can see that all estimated probabilities are significantly
+different from the whole genome probabilities:
 
 ```{r tests,include=TRUE,echo=FALSE,eval=TRUE,results='markup'}
 lapply(tests,function(x)x$test)
