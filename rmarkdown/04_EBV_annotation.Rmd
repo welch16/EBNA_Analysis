@@ -76,7 +76,7 @@ The estimated probabilites are given as:
 
 ```{r probs,include=TRUE,echo = FALSE,eval=TRUE,results='markup'}
 
-kable(dcast.data.table( sample ~ lab,data = whole , value.var = "probs"),digits=4) 
+kable(dcast.data.table( sample ~ lab,data = whole , value.var = "probs"),format='markdown',digits=4) 
 
 ```
 

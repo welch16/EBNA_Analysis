@@ -51,9 +51,16 @@ divided by total number of peaks following:
 The estimated probabilites are given as:
 
 
-```
-## Error in kable(dcast.data.table(sample ~ lab, data = whole, value.var = "probs"), : table format not implemented yet!
-```
+|sample | Gene body| Intergenic| Promoter|
+|:------|---------:|----------:|--------:|
+|genome |    0.2697|     0.7147|   0.0156|
+|EBNA2  |    0.4871|     0.4298|   0.0831|
+|EBNA3A |    0.4107|     0.4028|   0.1866|
+|EBNA3B |    0.4690|     0.4405|   0.0905|
+|EBNA3C |    0.4298|     0.5464|   0.0238|
+|JK92   |    0.4996|     0.4359|   0.0645|
+|JK234  |    0.4765|     0.4884|   0.0352|
+|RBPJ   |    0.4886|     0.4547|   0.0567|
 
 Clearly all estimated probabilities are significantly different from
 the whole genome probabilities:
