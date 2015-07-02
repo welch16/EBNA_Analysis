@@ -1,0 +1,41 @@
+
+
+```{r init,include =FALSE,echo = FALSE,eval = TRUE}
+
+library(data.table)
+library(knitr)
+
+```
+
+## Association tests among peak sets
+
+
+Using the annotation into those three categories, we performed
+chi-square tests to compare the annotation distribution among the
+different sets.
+
+```{r assoc,include=FALSE,echo=FALSE,eval=TRUE}
+
+load("../data/RData/association_tests.RData" )
+
+assoc[,parameter := NULL]
+assoc <- assoc[ !grepl("JK",Set1) & !grepl("JK",Set2)]
+
+```
+
+```{r assoc2,include=TRUE,eval=TRUE,echo=FALSE,results='markup'}
+
+kable(assoc,format = 'markdown',digits = 4)
+
+```
+
+Here we can see that almost all pairs are strongly associated on this
+partition (promoters,gene body and intergenic), except EBNA2 and
+EBNA3B.
+
+
+Note: This analysis doesn't consider any spatial information about the
+peak sets.
+
+
+
