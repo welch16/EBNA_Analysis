@@ -24,3 +24,6 @@ data/RData/annotation.RData:
 
 data/RData/association_tests.RData:
 	R CMD BATCH scripts/association_on_annot_tests.R
+
+inst/generated/Big_overlaps_matrix.csv:
+	R CMD BATCH scripts/unify_overlap_matrix.R
