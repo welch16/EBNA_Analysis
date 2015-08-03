@@ -18,8 +18,16 @@ different sets.
 
 load("../data/RData/association_tests.RData" )
 
+assoc <- out[["assoc"]]
+gof <- out[["gof"]]
+
 assoc[,parameter := NULL]
 assoc <- assoc[ !grepl("JK",Set1) & !grepl("JK",Set2)]
+
+gof[,parameter := NULL]
+gof <- gof[  !grepl("JK",Set1) & !grepl("JK",Set2)]
+
+gof <- gof[ Set1 != Set2]
 
 ```
 
@@ -32,6 +40,20 @@ kable(assoc,format = 'markdown',digits = 4)
 Here we can see that almost all pairs are strongly associated on this
 partition (promoters,gene body and intergenic), except EBNA2 and
 EBNA3B.
+
+
+```{r gof,include =TRUE,eval= TRUE,echo =FALSE,results = 'markup'}
+
+kable(gof,format = 'markdown',digits = 4)
+
+```
+
+This are goodness of fit tests, therefore we are testing if the
+probability distributions of the first set could be generated as a
+sample from the probability distribution of the second set.
+
+
+
 
 
 Note: This analysis doesn't consider any spatial information about the
