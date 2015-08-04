@@ -59,11 +59,50 @@ probability distributions of the first set could be generated as a
 sample from the probability distribution of the second set.
 
 
-
-
-
 Note: This analysis doesn't consider any spatial information about the
 peak sets.
 
+## Conditional on Dnase
 
+
+
+
+
+
+|Set1   |Set2   | statistic| p.value| minus_log10|
+|:------|:------|---------:|-------:|-----------:|
+|EBNA2  |EBNA3A |  346.2600|  0.0000|     75.1894|
+|EBNA2  |EBNA3B |    3.1724|  0.2047|      0.6889|
+|EBNA2  |EBNA3C |   70.6071|  0.0000|     15.3321|
+|EBNA2  |RBPJ   |   37.0462|  0.0000|      8.0445|
+|EBNA3A |EBNA3B |  192.7779|  0.0000|     41.8612|
+|EBNA3A |EBNA3C |  364.0075|  0.0000|     79.0432|
+|EBNA3A |RBPJ   |  549.8193|  0.0000|    119.3917|
+|EBNA3B |EBNA3C |   71.2123|  0.0000|     15.4636|
+|EBNA3B |RBPJ   |   40.3631|  0.0000|      8.7647|
+|EBNA3C |RBPJ   |   35.7305|  0.0000|      7.7588|
+
+
+|Set1   |Set2   | statistic| p.value| minus_log10|
+|:------|:------|---------:|-------:|-----------:|
+|EBNA2  |EBNA3A | 1472.2861|  0.0000|    319.7029|
+|EBNA2  |EBNA3B |   11.6849|  0.0029|      2.5373|
+|EBNA2  |EBNA3C |  626.7066|  0.0000|    136.0876|
+|EBNA2  |RBPJ   |   84.6159|  0.0000|     18.3741|
+|EBNA3A |EBNA2  |  478.4613|  0.0000|    103.8965|
+|EBNA3A |EBNA3B |  381.0112|  0.0000|     82.7355|
+|EBNA3A |EBNA3C | 1657.2395|  0.0000|         Inf|
+|EBNA3A |RBPJ   |  829.5572|  0.0000|    180.1361|
+|EBNA3B |EBNA2  |    4.3568|  0.1132|      0.9461|
+|EBNA3B |EBNA3A |  440.6683|  0.0000|     95.6899|
+|EBNA3B |EBNA3C |  297.1910|  0.0000|     64.5342|
+|EBNA3B |RBPJ   |   59.8863|  0.0000|     13.0041|
+|EBNA3C |EBNA2  |   81.6389|  0.0000|     17.7277|
+|EBNA3C |EBNA3A |  597.0912|  0.0000|    129.6567|
+|EBNA3C |EBNA3B |   99.2293|  0.0000|     21.5474|
+|EBNA3C |RBPJ   |   42.5278|  0.0000|      9.2348|
+|RBPJ   |EBNA2  |   66.1668|  0.0000|     14.3679|
+|RBPJ   |EBNA3A | 1994.3084|  0.0000|         Inf|
+|RBPJ   |EBNA3B |  125.2345|  0.0000|     27.1943|
+|RBPJ   |EBNA3C |  240.4488|  0.0000|     52.2128|
 

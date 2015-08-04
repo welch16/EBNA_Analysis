@@ -53,11 +53,39 @@ probability distributions of the first set could be generated as a
 sample from the probability distribution of the second set.
 
 
-
-
-
 Note: This analysis doesn't consider any spatial information about the
 peak sets.
 
+## Conditional on Dnase
 
+
+
+```{r assoc_dnase,include=FALSE,echo=FALSE,eval=TRUE}
+
+load("../data/RData/association_tests_dnase.RData" )
+
+assoc <- out[["assoc"]]
+gof <- out[["gof"]]
+
+assoc[,parameter := NULL]
+assoc <- assoc[ !grepl("JK",Set1) & !grepl("JK",Set2)]
+
+gof[,parameter := NULL]
+gof <- gof[  !grepl("JK",Set1) & !grepl("JK",Set2)]
+
+gof <- gof[ Set1 != Set2]
+
+```
+
+```{r assoc_dnase2,include=TRUE,eval=TRUE,echo=FALSE,results='markup'}
+
+kable(assoc,format = 'markdown',digits = 4)
+
+```
+
+```{r gof_dnase,include =TRUE,eval= TRUE,echo =FALSE,results = 'markup'}
+
+kable(gof,format = 'markdown',digits = 4)
+
+```
 

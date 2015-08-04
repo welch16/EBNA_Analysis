@@ -36,6 +36,9 @@ association_test <- function(ranges,peak_set1,peak_set2){
 k <- 1
 assoc <- list()
 peak_sets <- names(ranges)
+
+ranges <- lapply(ranges,subset , Dnase == 1)
+
 for(j in 1:(length(ranges)-1)){
   for(i in (j+1):length(ranges)){
     assoc[[k]] <- association_test(ranges,peak_sets[j],peak_sets[i])
@@ -58,7 +61,6 @@ gof_test <- function(ranges,peak_set1,peak_set2){
   return(out)  
 }
   
-gof_test(ranges,"EBNA2","EBNA3A")
 
 gof <- list()
 k <- 1
@@ -74,4 +76,4 @@ gof[,minus_log10 := -log10(p.value)]
 
 out <- list(assoc = assoc,gof = gof)
 
-save(out ,  file = "data/RData/association_tests.RData" )
+save(out ,  file = "data/RData/association_tests_dnase.RData" )
