@@ -52,13 +52,7 @@ This are goodness of fit tests, therefore we are testing if the
 probability distributions of the first set could be generated as a
 sample from the probability distribution of the second set.
 
-
-Note: This analysis doesn't consider any spatial information about the
-peak sets.
-
 ## Conditional on Dnase
-
-
 
 ```{r assoc_dnase,include=FALSE,echo=FALSE,eval=TRUE}
 
@@ -83,9 +77,22 @@ kable(assoc,format = 'markdown',digits = 4)
 
 ```
 
+Again in thise case, we are seeing that almost all pairs of peak
+sets are strongly associated conditional on Dnase binding except for
+EBNA2 and EBNA3B again.
+
+
 ```{r gof_dnase,include =TRUE,eval= TRUE,echo =FALSE,results = 'markup'}
 
 kable(gof,format = 'markdown',digits = 4)
 
 ```
+
+Similarly this are goodnes of fit tests as above where we are testing
+if the conditional distribution on Dnase binding could be generated
+from the second set's distribution.
+
+
+Note: This analysis doesn't consider any spatial information about the
+peak sets.
 

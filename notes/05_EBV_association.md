@@ -58,13 +58,7 @@ This are goodness of fit tests, therefore we are testing if the
 probability distributions of the first set could be generated as a
 sample from the probability distribution of the second set.
 
-
-Note: This analysis doesn't consider any spatial information about the
-peak sets.
-
 ## Conditional on Dnase
-
-
 
 
 
@@ -81,6 +75,11 @@ peak sets.
 |EBNA3B |EBNA3C |   71.2123|  0.0000|     15.4636|
 |EBNA3B |RBPJ   |   40.3631|  0.0000|      8.7647|
 |EBNA3C |RBPJ   |   35.7305|  0.0000|      7.7588|
+
+Again in thise case, we are seeing that almost all pairs of peak
+sets are strongly associated conditional on Dnase binding except for
+EBNA2 and EBNA3B again.
+
 
 
 |Set1   |Set2   | statistic| p.value| minus_log10|
@@ -105,4 +104,12 @@ peak sets.
 |RBPJ   |EBNA3A | 1994.3084|  0.0000|         Inf|
 |RBPJ   |EBNA3B |  125.2345|  0.0000|     27.1943|
 |RBPJ   |EBNA3C |  240.4488|  0.0000|     52.2128|
+
+Similarly this are goodnes of fit tests as above where we are testing
+if the conditional distribution on Dnase binding could be generated
+from the second set's distribution.
+
+
+Note: This analysis doesn't consider any spatial information about the
+peak sets.
 
