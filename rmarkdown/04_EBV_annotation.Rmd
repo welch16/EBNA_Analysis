@@ -28,6 +28,10 @@ library(ggplot2)
 library(RColorBrewer)
 library(reshape2)
 
+load("../data/RData/annotation_dnase.RData")
+
+out_dnase <- out
+
 load("../data/RData/annotation.RData")
 
 ```
@@ -65,9 +69,11 @@ divided by total number of peaks following
 
 
 ```{r whole , include= TRUE,echo =FALSE,eval = TRUE,fig.width=4,fig.height=4,out.width=600,dpi=400}
+
 ggplot(whole[!sample %in% c("JK92","JK234")] ,aes(sample , probs,fill = sample))+
   geom_bar(stat = "identity")+facet_grid( . ~ lab)+scale_fill_brewer(palette = "Set1")+
   theme(legend.position = "none",axis.text.x = element_text(angle = 90))+xlab("")+ylab("")
+
 ```
 
 The estimated probabilites are given as:
@@ -82,7 +88,48 @@ We can see that all estimated probabilities are significantly
 different from the whole genome probabilities:
 
 ```{r tests,include=TRUE,echo=FALSE,eval=TRUE,results='markup'}
+
 lapply(tests,function(x)x$test)
+
 ```
 
+### Conditional on Dnase
 
+Following the previous analysis, we repeated it but considering to
+estimate the promoter and gene probabilities as the number of base
+pairs in the union of the Dnase peaks that satisfy the criteria above
+for promoters and genes respectively.
+
+
+
+
+```{r separate_dnase,include=FALSE,echo=FALSE,eval=TRUE}
+
+tests <- out_dnase[[1]]
+whole <- out_dnase[[2]]
+
+```
+
+```{r whole_dnase , include= TRUE,echo =FALSE,eval = TRUE,fig.width=4,fig.height=4,out.width=600,dpi=400}
+
+ggplot(whole[!sample %in% c("JK92","JK234")] ,aes(sample , probs,fill = sample))+
+  geom_bar(stat = "identity")+facet_grid( . ~ lab)+scale_fill_brewer(palette = "Set1")+
+  theme(legend.position = "none",axis.text.x = element_text(angle = 90))+xlab("")+ylab("")
+
+```
+
+And the estimated probabilities conditional on Dnase are:
+
+The estimated probabilites are given as:
+
+```{r probs_dnase,include=TRUE,echo = FALSE,eval=TRUE,results='markup'}
+
+kable(dcast.data.table( sample ~ lab,data = whole , value.var = "probs"),format='markdown',digits=4)
+
+```
+
+```{r tests_dnase,include=TRUE,echo=FALSE,eval=TRUE,results='markup'}
+
+lapply(tests,function(x)x$test)
+
+```

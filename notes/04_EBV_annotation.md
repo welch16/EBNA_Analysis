@@ -121,4 +121,90 @@ different from the whole genome probabilities:
 ## X-squared = 3807.25, df = 2, p-value < 2.2e-16
 ```
 
+### Conditional on Dnase
 
+Following the previous analysis, we repeated it but considering to
+estimate the promoter and gene probabilities as the number of base
+pairs in the union of the Dnase peaks that satisfy the criteria above
+for promoters and genes respectively.
+
+
+
+
+
+
+<img src="../figures/EBV_annots/whole_dnase -1.png" title="plot of chunk whole_dnase " alt="plot of chunk whole_dnase " width="600" />
+
+And the estimated probabilities conditional on Dnase are:
+
+The estimated probabilites are given as:
+
+
+|sample | Gene body| Intergenic| Promoter|
+|:------|---------:|----------:|--------:|
+|genome |    0.3557|     0.5633|   0.0811|
+|EBNA2  |    0.4901|     0.4190|   0.0909|
+|EBNA3A |    0.4068|     0.3098|   0.2834|
+|EBNA3B |    0.4812|     0.4164|   0.1024|
+|EBNA3C |    0.4614|     0.4986|   0.0400|
+|JK92   |    0.5062|     0.4243|   0.0695|
+|JK234  |    0.4990|     0.4585|   0.0425|
+|RBPJ   |    0.5029|     0.4318|   0.0653|
+
+
+```
+## $EBNA2
+## 
+## 	Chi-squared test for given probabilities
+## 
+## data:  counts
+## X-squared = 702.8648, df = 2, p-value < 2.2e-16
+## 
+## 
+## $EBNA3A
+## 
+## 	Chi-squared test for given probabilities
+## 
+## data:  counts
+## X-squared = 665.3966, df = 2, p-value < 2.2e-16
+## 
+## 
+## $EBNA3B
+## 
+## 	Chi-squared test for given probabilities
+## 
+## data:  counts
+## X-squared = 234.2236, df = 2, p-value < 2.2e-16
+## 
+## 
+## $EBNA3C
+## 
+## 	Chi-squared test for given probabilities
+## 
+## data:  counts
+## X-squared = 107.4833, df = 2, p-value < 2.2e-16
+## 
+## 
+## $JK92
+## 
+## 	Chi-squared test for given probabilities
+## 
+## data:  counts
+## X-squared = 733.9508, df = 2, p-value < 2.2e-16
+## 
+## 
+## $JK234
+## 
+## 	Chi-squared test for given probabilities
+## 
+## data:  counts
+## X-squared = 323.594, df = 2, p-value < 2.2e-16
+## 
+## 
+## $RBPJ
+## 
+## 	Chi-squared test for given probabilities
+## 
+## data:  counts
+## X-squared = 791.8673, df = 2, p-value < 2.2e-16
+```

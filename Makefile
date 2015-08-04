@@ -22,6 +22,9 @@ data/RData/pam_clusters.RData:
 data/RData/annotation.RData:
 	R CMD BATCH scripts/annotate_EBV.R
 
+data/RData/annotation_dnase.RData:
+	R CMD BATCH scripts/annotate_EBV_with_Dnase.R
+
 data/RData/association_tests.RData:
 	R CMD BATCH scripts/association_on_annot_tests.R
 
