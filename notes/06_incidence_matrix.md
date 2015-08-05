@@ -1,18 +1,17 @@
 
 ## Building the incidence matrix
 
-We considered a list of all the genomic intervals in the experiment as
-the disjoint union of all the peaks in the EBNA2, EBNA3A, EBNA3B,
-EBNA3C and RBPJ peak sets.
+We considered a two-step approach to construct a peak overlap
+incidence matrix using the lists of peaks for EBNA2, EBNA3A, EBNA3B,
+EBNA3C and RBPJ. Specifically,
 
-For each of the peaks in the list we built an incidence vector
-representing which peak sets were used to construct it. That way if an
-interval in the experiment is made as the union of an EBNA2 and an
-EBNA3B peaks, then it's incidence vectors is going to be (1,0,1,0,0).
+1. We obtained the regions universe as the disjoint union of all the
+   elements in the EBNA2, EBNA3A, EBNA3B, EBNA3C and RBPJ peak lists.
 
-Additionally we built the ENCODE TF peaks overlaps indicators as 1
-when any of the peaks used to construct the region overlaps the TF and
-0 otherwise.
+2. We built an incidence matrix by using the regions universe and the
+   peak lists. Each entry of the incidence matrix was set to 1 when a
+   peak in the list was used to construct the region and 0 otherwise.
 
-
-
+Additionally, we constructed ENCODE transcription factors columns to
+indicate whether or not the region overlapped a peak in the ENCODE
+peak sets obtained from.
