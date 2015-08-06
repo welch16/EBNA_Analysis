@@ -4,7 +4,18 @@
 For this part, we considered the annotation of the EBNA to ENCODE's
 enhancer segmentation. This segmentation is the latest, and the states
 considered are explained in
-[here](https://genome.ucsc.edu/cgi-bin/hgTrackUi?g=wgEncodeAwgSegmentation&db=hg19)
+[here](https://genome.ucsc.edu/cgi-bin/hgTrackUi?g=wgEncodeAwgSegmentation&db=hg19):
+
+- TSS	Predicted promoter region including TSS
+- PF	Predicted promoter flanking region
+- E		Predicted enhancer
+- WE	Predicted weak enhancer or open chromatin cis regulatory element
+- CTCF	CTCF enriched element
+- T		Predicted transcribed region
+- R		Repressed or Low Activity region
+
+
+
 
 The data used for our case was extracted from
 [here](https://www.encodeproject.org/datasets/ENCSR212BHV/)
