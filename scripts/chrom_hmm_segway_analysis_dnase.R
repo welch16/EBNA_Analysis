@@ -106,4 +106,4 @@ p <- ggplot(du[grep("JK",set,invert = TRUE)] , aes(label,perc,fill = label ))+ge
 
 chromHMM <- list(table = tab, data = du , plot = p)
 
-save(file = "data/RData/chromHMM_proportions_dnase.RData",chromHMM)
+save(file = "data/RData/chromHMM_segway_proportions_dnase.RData",chromHMM)

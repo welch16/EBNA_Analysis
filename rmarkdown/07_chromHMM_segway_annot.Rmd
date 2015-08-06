@@ -45,7 +45,7 @@ library(ggplot2)
 
 ```{r allpeaks,include = FALSE,eval = TRUE,echo = FALSE}
 
-load("data/RData/chromHMM_proportions.RData")
+load("data/RData/chromHMM_segway_proportions.RData")
 tab <- chromHMM[[1]]
 plot <- chromHMM[[3]]
 
@@ -67,7 +67,7 @@ plot
 
 ```{r dnase,include = FALSE,eval = TRUE,echo = FALSE}
 
-load("data/RData/chromHMM_proportions_dnase.RData")
+load("data/RData/chromHMM_segway_proportions_dnase.RData")
 tab <- chromHMM[[1]]
 plot <- chromHMM[[3]]
 
