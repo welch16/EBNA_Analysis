@@ -28,5 +28,12 @@ data/RData/annotation_dnase.RData:
 data/RData/association_tests.RData:
 	R CMD BATCH scripts/association_on_annot_tests.R
 
+data/RData/chromHMM_proportions.RData:
+	R CMD BATCH scripts/chrom_hmm_analysis.R
+
+data/RData/chromHMM_proportions_dnase.RData:
+	R CMD BATCH scripts/chrom_hmm_analysis_dnase.R
+
 inst/generated/Big_overlaps_matrix.csv:
 	R CMD BATCH scripts/unify_overlap_matrix.R
+

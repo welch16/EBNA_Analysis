@@ -1,0 +1,76 @@
+
+## Enhancer segmentation of EBNA peaks
+
+For this part, we considered the annotation of the EBNA to ENCODE's
+enhancer segmentation. This segmentation is the latest, and the states
+considered are explained in
+[here](https://genome.ucsc.edu/cgi-bin/hgTrackUi?g=wgEncodeAwgSegmentation&db=hg19)
+
+The data used for our case was extracted from
+[here](https://www.encodeproject.org/datasets/ENCSR212BHV/)
+
+Roughly speaking, we took all the EBV peaks (considering two separate
+cases, before and after filtering the ones that overlap Dnase
+hypersensitive sites), and look for annotation that corresponds
+according to the chromHMM - Segway segmentation. In case of a tie, we
+considered the annotation as the one that occupied the largest number
+of bp in the peak. We have built the chance to use the first or last
+labels too respect to the 5' coordinates.
+
+```{r init1,include= FALSE , echo = FALSE, eval = TRUE}
+
+
+library(knitr)
+opts_knit$set(root.dir=normalizePath('../'))
+opts_chunk$set(fig.path = "../figures/chromHMM/")
+
+library(data.table)
+library(RColorBrewer)
+library(ggplot2)
+
+```
+
+### All the peaks
+
+```{r allpeaks,include = FALSE,eval = TRUE,echo = FALSE}
+
+load("data/RData/chromHMM_proportions.RData")
+tab <- chromHMM[[1]]
+plot <- chromHMM[[3]]
+
+
+```
+
+The number of peaks that overlap each annotation are given by:
+
+```{r annot,include= TRUE,echo = FALSE,eval = TRUE}
+tab
+
+```
+
+```{r barplot,include = TRUE,echo = FALSE,eval = TRUE, fig.width = 7,fig.height = 5,dpi=200}
+plot
+```
+
+### Overlap with DHS
+
+```{r dnase,include = FALSE,eval = TRUE,echo = FALSE}
+
+load("data/RData/chromHMM_proportions_dnase.RData")
+tab <- chromHMM[[1]]
+plot <- chromHMM[[3]]
+
+
+```
+
+The number of peaks that overlap each annotation and DHS are given by:
+
+```{r annot2,include= TRUE,echo = FALSE,eval = TRUE}
+tab
+
+```
+
+```{r barplotDnase,include = TRUE,echo = FALSE,eval = TRUE, fig.width = 7,fig.height = 5,dpi=200}
+plot
+```
+
