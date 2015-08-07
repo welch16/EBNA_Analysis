@@ -119,8 +119,6 @@ dt[is.na(label),label := "0_none"]
 dt[,label := factor(label,levels = labs)]
 
 
-
-
 ## labs <- c("TSS","PF","E","WE","CTCF","T","R")
 ## dt[,label := plyr::mapvalues(label ,
 ##       from = c("1","2","3","4","5","6","7"),
