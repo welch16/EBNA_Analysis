@@ -34,6 +34,12 @@ data/RData/chromHMM_segway_proportions.RData:
 data/RData/chromHMM_segway_proportions_dnase.RData:
 	R CMD BATCH scripts/chrom_hmm_segway_analysis_dnase.R
 
+data/RData/chromHMM_proportions.RData:
+	R CMD BATCH scripts/chrom_hmm_analysis.R
+
+data/RData/chromHMM_proportions_dnase.RData:
+	R CMD BATCH scripts/chrom_hmm_analysis_dnase.R
+
 inst/generated/Big_overlaps_matrix.csv:
 	R CMD BATCH scripts/unify_overlap_matrix.R
 
