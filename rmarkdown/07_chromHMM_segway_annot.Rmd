@@ -33,7 +33,7 @@ labels too respect to the 5' coordinates.
 
 library(knitr)
 opts_knit$set(root.dir=normalizePath('../'))
-opts_chunk$set(fig.path = "../figures/chromHMM/")
+opts_chunk$set(fig.path = "../figures/chromHMM_Segway/")
 
 library(data.table)
 library(RColorBrewer)

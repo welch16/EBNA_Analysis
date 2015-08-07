@@ -49,7 +49,7 @@ The number of peaks that overlap each annotation are given by:
 ##   RBPJ   1136 2030 3221  310  253 2985   82
 ```
 
-![plot of chunk barplot](../figures/chromHMM/barplot-1.png) 
+![plot of chunk barplot](../figures/chromHMM_Segway/barplot-1.png) 
 
 ### Overlap with DHS
 
@@ -70,5 +70,5 @@ The number of peaks that overlap each annotation and DHS are given by:
 ##   RBPJ   1129 2020 3118  292  141 1612   48
 ```
 
-![plot of chunk barplotDnase](../figures/chromHMM/barplotDnase-1.png) 
+![plot of chunk barplotDnase](../figures/chromHMM_Segway/barplotDnase-1.png) 
 
