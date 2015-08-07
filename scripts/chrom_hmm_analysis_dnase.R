@@ -150,7 +150,6 @@ dt[,label := plyr::revalue(label,
     "13_Heterochrom/lo"="11_Heterochrom/lo",
     "14_Repetitive/CNV"="12_Repetitive/CNV"))]      
 
-
 tab <- table(dt)
 du <- data.table(tab)
 
@@ -160,12 +159,34 @@ du[,label := factor(label, levels = rev(labs))]
 du[,perc := 100 * N / sum(N) , by  = set]
 
 
-getPalette <- colorRampPalette(brewer.pal(9,"Set1"))
+getPalette1 <- colorRampPalette(brewer.pal(8,"Set1"))
+getPalette2 <- colorRampPalette(brewer.pal(8,"Set2"))
+vals <- c( getPalette1(6), getPalette2(7))
+
 p <- ggplot(du[grep("JK",set,invert = TRUE)] , aes(label,perc,fill = label ))+geom_bar(width = .8,stat = "identity")+
-  scale_fill_manual(values = getPalette(length(labs)))+scale_y_continuous(expand = c(0,0),limits = c(0,20))+
+  scale_fill_manual(values = rev(vals))+scale_y_continuous(expand = c(0,0),limits = c(0,70))+
   coord_flip()+facet_grid( set ~ .)+theme(legend.position = "none")+ylab("Percentage")+
   xlab("ChromHMM annotation")
 
-chromHMM <- list(table = tab, data = du , plot = p)
+
+sets <- names(ranges)
+sets <- sets[grep("JK",sets,invert = TRUE)]
+
+du[,label := factor(label, levels = labs)]
+
+pies <- lapply( sets , function(z){
+  ggplot(du[set == z] , aes(x = factor(1),y = perc, fill = label),colour = "black")+
+    geom_bar(stat = "identity",width = 1) + coord_polar(theta = "y")+
+    scale_fill_manual(name="Category",values = vals)+
+    theme_bw()+theme(axis.text = element_blank(),axis.ticks = element_blank(),
+                     panel.grid = element_blank())+
+    xlab("")+ylab("")})
+names(pies) <- sets
+
+pies <- mapply(function(x,y){
+  x + ggtitle(y)},pies,sets,SIMPLIFY = FALSE)
+
+
+chromHMM <- list(table = tab, data = du , plot = p,pies = pies)
 
 save(file = "data/RData/chromHMM_proportions_dnase.RData",chromHMM)

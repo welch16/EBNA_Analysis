@@ -75,6 +75,8 @@ The number of peaks that overlap each annotation are given by:
 
 ![plot of chunk barplot](../figures/chromHMM/barplot-1.png) 
 
+![plot of chunk pies](../figures/chromHMM/pies-1.png) ![plot of chunk pies](../figures/chromHMM/pies-2.png) ![plot of chunk pies](../figures/chromHMM/pies-3.png) ![plot of chunk pies](../figures/chromHMM/pies-4.png) ![plot of chunk pies](../figures/chromHMM/pies-5.png) 
+
 ### Overlap with DHS
 
 The number of peaks that overlap each annotation and DHS are given by:
@@ -121,3 +123,4 @@ The number of peaks that overlap each annotation and DHS are given by:
 
 ![plot of chunk barplotDnase](../figures/chromHMM/barplotDnase-1.png) 
 
+![plot of chunk piesDnase](../figures/chromHMM/piesDnase-1.png) ![plot of chunk piesDnase](../figures/chromHMM/piesDnase-2.png) ![plot of chunk piesDnase](../figures/chromHMM/piesDnase-3.png) ![plot of chunk piesDnase](../figures/chromHMM/piesDnase-4.png) ![plot of chunk piesDnase](../figures/chromHMM/piesDnase-5.png) 

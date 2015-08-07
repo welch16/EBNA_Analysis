@@ -36,8 +36,9 @@ library(data.table)
 library(RColorBrewer)
 library(ggplot2)
 
-getPalette <- colorRampPalette(brewer.pal(9,"Set1"))
-
+getPalette1 <- colorRampPalette(brewer.pal(8,"Set1"))
+getPalette2 <- colorRampPalette(brewer.pal(8,"Set2"))
+vals <- c( getPalette1(6), getPalette2(7))
 
 ```
 
@@ -48,10 +49,12 @@ getPalette <- colorRampPalette(brewer.pal(9,"Set1"))
 load("data/RData/chromHMM_proportions.RData")
 tab <- chromHMM[[1]]
 plot <- chromHMM[[3]]
+pies <- chromHMM[[4]]
 
 load("data/RData/chromHMM_proportions_dnase.RData")
 tab2 <- chromHMM[[1]]
 plot2 <- chromHMM[[3]]
+pies2 <- chromHMM[[4]]
 
 labs <- colnames(tab)
 
@@ -64,8 +67,16 @@ tab
 
 ```
 
-```{r barplot,include = TRUE,echo = FALSE,eval = TRUE, fig.width = 8,fig.height = 6,dpi=500,warning = FALSE}
+```{r barplot,include = TRUE,echo = FALSE,eval = TRUE, fig.width = 8,fig.height = 6,dpi=600,warning = FALSE}
+
 plot+theme(axis.text.y = element_text(size = 5))
+
+```
+
+```{r pies,include =TRUE,echo = FALSE,eval = TRUE, fig.width = 4, fig.height = 4 ,dpi = 500,warning = FALSE}
+
+u <-lapply(pies,print)
+
 ```
 
 ### Overlap with DHS
@@ -77,7 +88,14 @@ tab2
 
 ```
 
-```{r barplotDnase,include = TRUE,echo = FALSE,eval = TRUE, fig.width = 8,fig.height = 6,dpi=500,warning = FALSE}
+```{r barplotDnase,include = TRUE,echo = FALSE,eval = TRUE, fig.width = 8,fig.height = 6,dpi=600,warning = FALSE}
+
 plot2+theme(axis.text.y = element_text(size = 5))
+
 ```
 
+```{r piesDnase,include =TRUE,echo = FALSE,eval = TRUE, fig.width = 4, fig.height =4 ,dpi = 500,warning = FALSE}
+
+u <-lapply(pies2,print)
+
+```
