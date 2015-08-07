@@ -16,6 +16,15 @@ occupied the largest number of bp in the peak. We have built the
 chance to use the first or last labels too respect to the 5'
 coordinates.
 
+Since in the original annotation there are 3 labels that are repeated,
+those were joined together with their respective pair and the
+enumeration was altered a little bit. In total we had 13 categories:
+
+- Original 15
+- Minus 3 repeated
+- Plus 1 added with the regions missing by the liftOver
+
+
 ```{r init1,include= FALSE , echo = FALSE, eval = TRUE}
 
 
@@ -43,6 +52,8 @@ plot <- chromHMM[[3]]
 load("data/RData/chromHMM_proportions_dnase.RData")
 tab2 <- chromHMM[[1]]
 plot2 <- chromHMM[[3]]
+
+labs <- colnames(tab)
 
 ```
 

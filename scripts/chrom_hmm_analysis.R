@@ -120,22 +120,50 @@ labs <- c("0_none",
           "14_Repetitive/CNV",
           "15_Repetitive/CNV")
 
+
+
 dt <- do.call(rbind, dt)
 dt[is.na(label),label := "0_none"]
 
 dt[,label := factor(label,levels = labs)]
 
+new_labs <- c("0_none",
+          "1_Active_Promoter",
+          "2_Weak_Promoter",
+          "3_Poised_Promoter",
+          "4_Strong_Enhancer",
+          "4_Strong_Enhancer",
+          "6_Weak_Enhancer",
+          "6_Weak_Enhancer",
+          "8_Insulator",
+          "9_Txn_Transition",
+          "10_Txn_Elongation",
+          "11_Weak_Txn",
+          "12_Repressed",
+          "13_Heterochrom/lo",
+          "14_Repetitive/CNV",
+          "14_Repetitive/CNV")
 
 
+dt[,label := plyr::mapvalues(label ,
+      from = labs, to = new_labs)]
 
-## labs <- c("TSS","PF","E","WE","CTCF","T","R")
-## dt[,label := plyr::mapvalues(label ,
-##       from = c("1","2","3","4","5","6","7"),
-##       to = labs)]
+dt[,label := plyr::revalue(label,
+  c("6_Weak_Enhancer"="5_Weak_Enhancer",
+    "8_Insulator"="6_Insulator",
+    "9_Txn_Transition"="7_Txn_Transition",
+    "10_Txn_Elongation"="8_Txn_Elongation",
+    "11_Weak_Txn"="9_Weak_Txn",
+    "12_Repressed"="10_Repressed",
+    "13_Heterochrom/lo"="11_Heterochrom/lo",
+    "14_Repetitive/CNV"="12_Repetitive/CNV"))]      
+
 
 tab <- table(dt)
-
 du <- data.table(tab)
+
+labs <- unique(du[,(label)])
+
 du[,label := factor(label, levels = rev(labs))]
 du[,perc := 100 * N / sum(N) , by  = set]
 

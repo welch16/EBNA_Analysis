@@ -16,6 +16,15 @@ occupied the largest number of bp in the peak. We have built the
 chance to use the first or last labels too respect to the 5'
 coordinates.
 
+Since in the original annotation there are 3 labels that are repeated,
+those were joined together with their respective pair and the
+enumeration was altered a little bit. In total we had 13 categories:
+
+- Original 15
+- Minus 3 repeated
+- Plus 1 added with the regions missing by the liftOver
+
+
 
 
 ### All the peaks
@@ -36,41 +45,32 @@ The number of peaks that overlap each annotation are given by:
 ##   JK92      106               126              44                12
 ##   RBPJ      134               139              59                13
 ##         label
-## set      4_Strong_Enhancer 5_Strong_Enhancer 6_Weak_Enhancer
-##   EBNA2                194               165              80
-##   EBNA3A                20                17              12
-##   EBNA3B                59                50              29
-##   EBNA3C                40                45              26
-##   JK234                 86                76              25
-##   JK92                 171               148              60
-##   RBPJ                 204               177              73
+## set      4_Strong_Enhancer 5_Weak_Enhancer 6_Insulator 7_Txn_Transition
+##   EBNA2                359             316          18              136
+##   EBNA3A                37              54           4               29
+##   EBNA3B               109             116           3               54
+##   EBNA3C                85             111           4               31
+##   JK234                162             144           2               66
+##   JK92                 319             267           9              124
+##   RBPJ                 381             328          10              148
 ##         label
-## set      7_Weak_Enhancer 8_Insulator 9_Txn_Transition 10_Txn_Elongation
-##   EBNA2              236          18              136               913
-##   EBNA3A              42           4               29               142
-##   EBNA3B              87           3               54               274
-##   EBNA3C              85           4               31               238
-##   JK234              119           2               66               377
-##   JK92               207           9              124               854
-##   RBPJ               255          10              148               989
+## set      8_Txn_Elongation 9_Weak_Txn 10_Repressed 11_Heterochrom/lo
+##   EBNA2               913       1586          332              4815
+##   EBNA3A              142        264           72               976
+##   EBNA3B              274        535          113              1739
+##   EBNA3C              238        517          151              2336
+##   JK234               377        750          137              2505
+##   JK92                854       1495          285              4533
+##   RBPJ                989       1788          350              5673
 ##         label
-## set      11_Weak_Txn 12_Repressed 13_Heterochrom/lo 14_Repetitive/CNV
-##   EBNA2         1586          332              4815                 3
-##   EBNA3A         264           72               976                 2
-##   EBNA3B         535          113              1739                 3
-##   EBNA3C         517          151              2336                 6
-##   JK234          750          137              2505                 4
-##   JK92          1495          285              4533                 1
-##   RBPJ          1788          350              5673                 5
-##         label
-## set      15_Repetitive/CNV
-##   EBNA2                  2
-##   EBNA3A                 0
-##   EBNA3B                 1
-##   EBNA3C                 1
-##   JK234                  0
-##   JK92                   0
-##   RBPJ                   0
+## set      12_Repetitive/CNV
+##   EBNA2                  5
+##   EBNA3A                 2
+##   EBNA3B                 4
+##   EBNA3C                 7
+##   JK234                  4
+##   JK92                   1
+##   RBPJ                   5
 ```
 
 ![plot of chunk barplot](../figures/chromHMM/barplot-1.png) 
@@ -91,41 +91,32 @@ The number of peaks that overlap each annotation and DHS are given by:
 ##   JK92       94               119              41                11
 ##   RBPJ      105               125              52                11
 ##         label
-## set      4_Strong_Enhancer 5_Strong_Enhancer 6_Weak_Enhancer
-##   EBNA2                178               154              69
-##   EBNA3A                16                12               8
-##   EBNA3B                54                44              27
-##   EBNA3C                26                31              19
-##   JK234                 81                67              19
-##   JK92                 160               134              54
-##   RBPJ                 188               154              61
+## set      4_Strong_Enhancer 5_Weak_Enhancer 6_Insulator 7_Txn_Transition
+##   EBNA2                332             281          17              125
+##   EBNA3A                28              34           2               26
+##   EBNA3B                98             104           3               52
+##   EBNA3C                57              70           2               18
+##   JK234                148             117           1               58
+##   JK92                 294             243           8              114
+##   RBPJ                 342             279           8              131
 ##         label
-## set      7_Weak_Enhancer 8_Insulator 9_Txn_Transition 10_Txn_Elongation
-##   EBNA2              212          17              125               840
-##   EBNA3A              26           2               26               107
-##   EBNA3B              77           3               52               249
-##   EBNA3C              51           2               18               140
-##   JK234               98           1               58               318
-##   JK92               189           8              114               787
-##   RBPJ               218           8              131               865
+## set      8_Txn_Elongation 9_Weak_Txn 10_Repressed 11_Heterochrom/lo
+##   EBNA2               840       1461          299              4234
+##   EBNA3A              107        181           53               585
+##   EBNA3B              249        487          101              1472
+##   EBNA3C              140        310           93              1043
+##   JK234               318        640          108              1881
+##   JK92                787       1375          259              4024
+##   RBPJ                865       1560          297              4582
 ##         label
-## set      11_Weak_Txn 12_Repressed 13_Heterochrom/lo 14_Repetitive/CNV
-##   EBNA2         1461          299              4234                 3
-##   EBNA3A         181           53               585                 2
-##   EBNA3B         487          101              1472                 1
-##   EBNA3C         310           93              1043                 2
-##   JK234          640          108              1881                 2
-##   JK92          1375          259              4024                 1
-##   RBPJ          1560          297              4582                 3
-##         label
-## set      15_Repetitive/CNV
-##   EBNA2                  2
-##   EBNA3A                 0
-##   EBNA3B                 1
-##   EBNA3C                 0
-##   JK234                  0
-##   JK92                   0
-##   RBPJ                   0
+## set      12_Repetitive/CNV
+##   EBNA2                  5
+##   EBNA3A                 2
+##   EBNA3B                 2
+##   EBNA3C                 2
+##   JK234                  2
+##   JK92                   1
+##   RBPJ                   3
 ```
 
 ![plot of chunk barplotDnase](../figures/chromHMM/barplotDnase-1.png) 
