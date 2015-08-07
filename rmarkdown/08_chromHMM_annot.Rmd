@@ -67,7 +67,7 @@ tab
 
 ```
 
-```{r barplot,include = TRUE,echo = FALSE,eval = TRUE, fig.width = 8,fig.height = 6,dpi=600,warning = FALSE}
+```{r barplot,include = TRUE,echo = FALSE,eval = TRUE, fig.width = 8,fig.height = 6,dpi=650,warning = FALSE}
 
 plot+theme(axis.text.y = element_text(size = 5))
 
@@ -88,7 +88,7 @@ tab2
 
 ```
 
-```{r barplotDnase,include = TRUE,echo = FALSE,eval = TRUE, fig.width = 8,fig.height = 6,dpi=600,warning = FALSE}
+```{r barplotDnase,include = TRUE,echo = FALSE,eval = TRUE, fig.width = 8,fig.height = 6,dpi=650,warning = FALSE}
 
 plot2+theme(axis.text.y = element_text(size = 5))
 
