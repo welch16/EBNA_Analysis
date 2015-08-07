@@ -73,7 +73,7 @@ plot+theme(axis.text.y = element_text(size = 5))
 
 ```
 
-```{r pies,include =TRUE,echo = FALSE,eval = TRUE, fig.width = 4, fig.height = 4 ,dpi = 500,warning = FALSE}
+```{r pies,include =TRUE,echo = FALSE,eval = TRUE, fig.width = 5, fig.height = 5 ,dpi = 500,warning = FALSE}
 
 u <-lapply(pies,print)
 
@@ -94,7 +94,7 @@ plot2+theme(axis.text.y = element_text(size = 5))
 
 ```
 
-```{r piesDnase,include =TRUE,echo = FALSE,eval = TRUE, fig.width = 4, fig.height =4 ,dpi = 500,warning = FALSE}
+```{r piesDnase,include =TRUE,echo = FALSE,eval = TRUE, fig.width = 5, fig.height =5 ,dpi = 500,warning = FALSE}
 
 u <-lapply(pies2,print)
 
