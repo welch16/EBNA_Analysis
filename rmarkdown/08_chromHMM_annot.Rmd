@@ -10,10 +10,11 @@ is no state available. The states are explained in
 Roughly speaking, we took all the EBV peaks (considering two separate
 cases, before and after filtering the ones that overlap Dnase
 hypersensitive sites), and look for annotation that corresponds
-according to the chromHMM - Segway segmentation. In case of a tie, we
-considered the annotation as the one that occupied the largest number
-of bp in the peak. We have built the chance to use the first or last
-labels too respect to the 5' coordinates.
+according to the liftOver'ed chromHMM segmentation (from hg18 to
+hg19). In case of a tie, we considered the annotation as the one that
+occupied the largest number of bp in the peak. We have built the
+chance to use the first or last labels too respect to the 5'
+coordinates.
 
 ```{r init1,include= FALSE , echo = FALSE, eval = TRUE}
 
