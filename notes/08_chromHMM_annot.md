@@ -82,32 +82,6 @@ The number of peaks that overlap each annotation are given by:
 ##   RBPJ                   0
 ```
 
-
-```
-## Warning in loop_apply(n, do.ply): Removed 1 rows containing missing values
-## (position_stack).
-```
-
-```
-## Warning in loop_apply(n, do.ply): Removed 1 rows containing missing values
-## (position_stack).
-```
-
-```
-## Warning in loop_apply(n, do.ply): Removed 1 rows containing missing values
-## (position_stack).
-```
-
-```
-## Warning in loop_apply(n, do.ply): Removed 1 rows containing missing values
-## (position_stack).
-```
-
-```
-## Warning in loop_apply(n, do.ply): Removed 1 rows containing missing values
-## (position_stack).
-```
-
 ![plot of chunk barplot](../figures/chromHMM/barplot-1.png) 
 
 ### Overlap with DHS
@@ -161,32 +135,6 @@ The number of peaks that overlap each annotation and DHS are given by:
 ##   JK234                  0
 ##   JK92                   0
 ##   RBPJ                   0
-```
-
-
-```
-## Warning in loop_apply(n, do.ply): Removed 1 rows containing missing values
-## (position_stack).
-```
-
-```
-## Warning in loop_apply(n, do.ply): Removed 1 rows containing missing values
-## (position_stack).
-```
-
-```
-## Warning in loop_apply(n, do.ply): Removed 1 rows containing missing values
-## (position_stack).
-```
-
-```
-## Warning in loop_apply(n, do.ply): Removed 1 rows containing missing values
-## (position_stack).
-```
-
-```
-## Warning in loop_apply(n, do.ply): Removed 1 rows containing missing values
-## (position_stack).
 ```
 
 ![plot of chunk barplotDnase](../figures/chromHMM/barplotDnase-1.png) 
