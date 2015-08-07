@@ -21,16 +21,6 @@ labels too respect to the 5' coordinates.
 
 
 
-
-```r
-identical(plot,plot2)
-```
-
-```
-## [1] FALSE
-```
-
-
 The number of peaks that overlap each annotation are given by:
 
 

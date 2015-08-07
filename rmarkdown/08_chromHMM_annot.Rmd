@@ -45,11 +45,6 @@ plot2 <- chromHMM[[3]]
 
 ```
 
-```{r test}
-identical(plot,plot2)
-```
-
-
 The number of peaks that overlap each annotation are given by:
 
 ```{r annot,include= TRUE,echo = FALSE,eval = TRUE}
