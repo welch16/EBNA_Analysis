@@ -158,11 +158,31 @@ dt[,label := plyr::revalue(label,
     "13_Heterochrom/lo"="11_Heterochrom/lo",
     "14_Repetitive/CNV"="12_Repetitive/CNV"))]      
 
+dt[,label := plyr::revalue(label,
+  c("0_none" = "Others",
+    "1_Active_Promoter" = "Active Promoters",
+    "2_Weak_Promoter" = "Weak and Poised Promoters",
+    "3_Poised_Promoter" = "Weak and Poised Promoters",
+    "4_Strong_Enhancer" = "Strong Enhancers",
+    "5_Weak_Enhancer" = "Weak Enhancers",
+    "6_Insulator" = "Others",
+    "7_Txn_Transition" = "Others",
+    "8_Txn_Elongation" = "Others",
+    "9_Weak_Txn" = "Others", 
+    "10_Repressed" = "Others",
+    "11_Heterochrom/lo" = "Heterochromatin",
+    "12_Repetitive/CNV" = "Others"))]
+
 
 tab <- table(dt)
 du <- data.table(tab)
 
-labs <- unique(du[,(label)])
+labs <- c("Active Promoters",
+          "Weak and Poised Promoters",
+          "Strong Enhancers",
+          "Weak Enhancers",
+          "Heterochromatin",
+          "Others")
 
 du[,label := factor(label, levels = rev(labs))]
 du[,perc := 100 * N / sum(N) , by  = set]
@@ -170,7 +190,7 @@ du[,perc := 100 * N / sum(N) , by  = set]
 
 getPalette1 <- colorRampPalette(brewer.pal(8,"Set1"))
 getPalette2 <- colorRampPalette(brewer.pal(8,"Set2"))
-vals <- c( getPalette1(6), getPalette2(7))
+vals <- c( getPalette1(6))
 
 p <- ggplot(du[grep("JK",set,invert = TRUE)] , aes(label,perc,fill = label ))+geom_bar(width = .8,stat = "identity")+
   scale_fill_manual(values = rev(vals))+scale_y_continuous(expand = c(0,0),limits = c(0,70))+
