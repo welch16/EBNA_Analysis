@@ -104,6 +104,26 @@ p <- ggplot(du[grep("JK",set,invert = TRUE)] , aes(label,perc,fill = label ))+ge
   coord_flip()+facet_grid( set ~ .)+theme(legend.position = "none")+ylab("Percentage")+
   xlab("ChromHMM annotation")
 
-chromHMM <- list(table = tab, data = du , plot = p)
+sets <- names(labels_mw)
+sets <- sets[grep("JK",sets,invert = TRUE)]
+
+du <- data.table(tab)
+du[,label := factor(label, levels = labs)]
+du[,perc := 100 * N / sum(N) , by  = set]
+
+
+pies <- lapply( sets , function(z){
+  ggplot(du[set == z] , aes(x = factor(1),y = perc, fill = label),colour = "black")+
+    geom_bar(stat = "identity",width = 1) + coord_polar(theta = "y")+
+    scale_fill_brewer(name="Category",palette = "Set1")+
+    theme_bw()+theme(axis.text = element_blank(),axis.ticks = element_blank(),
+                     panel.grid = element_blank())+
+    xlab("")+ylab("")})
+names(pies) <- sets
+
+pies <- mapply(function(x,y){
+  x + ggtitle(y)},pies,sets,SIMPLIFY = FALSE)
+
+chromHMM <- list(table = tab, data = du , plot = p, pies = pies)
 
 save(file = "data/RData/chromHMM_segway_proportions.RData",chromHMM)
