@@ -45,3 +45,6 @@ inst/generated/Big_overlaps_matrix.csv:
 
 data/RData/summits.RData:
 	R CMD BATCH scripts/find_summits.R
+
+data/RData/unified_lists_wProbs.RData:
+	R CMD BATCH scripts/build_base_lists.R
