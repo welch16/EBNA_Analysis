@@ -205,7 +205,7 @@ draw.quad.venn <- function (area1, area2, area3, area4, n12, n13, n14, n23, n24,
     label.matrix[9, ] <- c(area1, 0.18, 0.58)
     label.matrix[10, ] <- c(n14, 0.32, 0.42)
     label.matrix[11, ] <- c(n124, 0.425, 0.38)
-    label.matrix[12, ] <- c(n234, 0.575, 0.38)
+    label.matrix[12, ] <- c(n123, 0.575, 0.38)
     label.matrix[13, ] <- c(n23, 0.68, 0.42)
     label.matrix[14, ] <- c(area2, 0.82, 0.58)
     label.matrix[15, ] <- c(n12, 0.5, 0.28)
