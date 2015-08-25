@@ -43,11 +43,13 @@ data/RData/chromHMM_proportions_dnase.RData:
 inst/generated/Big_overlaps_matrix.csv:
 	R CMD BATCH scripts/unify_overlap_matrix.R
 
-data/RData/summits.RData:
-	R CMD BATCH scripts/find_summits.R
 
 data/RData/unified_lists_wProbs.RData:
 	R CMD BATCH scripts/build_base_lists.R
 
+data/RData/summits.RData:data/RData/unified_lists_wProbs.RData
+	R CMD BATCH scripts/find_summits.R
+
 figures/for_paper/fig1.pdf:data/RData/unified_lists_wProbs.RData
 	R CMD BATCH scripts/fig1.R
+
