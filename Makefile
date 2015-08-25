@@ -48,3 +48,6 @@ data/RData/summits.RData:
 
 data/RData/unified_lists_wProbs.RData:
 	R CMD BATCH scripts/build_base_lists.R
+
+figures/for_paper/fig1.pdf:data/RData/unified_lists_wProbs.RData
+	R CMD BATCH scripts/fig1.R
