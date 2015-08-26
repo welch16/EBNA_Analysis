@@ -50,6 +50,9 @@ data/RData/unified_lists_wProbs.RData:
 data/RData/summits.RData:data/RData/unified_lists_wProbs.RData
 	R CMD BATCH scripts/find_summits.R
 
+data/RData/factor_overlaps.RData:data/RData/unified_lists_wProbs.RData
+	R CMD BATCH scripts/factor_overlaps.R
+
 data/RData/sequences_around_summit.RData:data/RData/summits.RData data/RData/unified_lists_wProbs.RData
 	R CMD BATCH scripts/extract_sequences.R
 
