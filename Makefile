@@ -50,6 +50,9 @@ data/RData/unified_lists_wProbs.RData:
 data/RData/summits.RData:data/RData/unified_lists_wProbs.RData
 	R CMD BATCH scripts/find_summits.R
 
+data/RData/sequences_around_summit.RData:data/RData/summits.RData data/RData/unified_lists_wProbs.RData
+	R CMD BATCH scripts/extract_sequences.R
+
 figures/for_paper/fig1.pdf:data/RData/unified_lists_wProbs.RData
 	R CMD BATCH scripts/fig1.R
 
