@@ -4,6 +4,8 @@ library(GenomicRanges)
 library(data.table)
 library(parallel)
 
+source("R/meta_functions.R")
+
 load( file = "data/RData/unified_lists_wProbs.RData")
 
 mc <- detectCores()
@@ -17,30 +19,8 @@ sets <- c("EBNA2","EBNA3A","EBNA3B","EBNA3C","JK234","JK92")
 tf_dir <- "inst/tf_peaks"
 dhs_dir <- "inst/dnase_encode"
 
-load_meta <- function(dir)
-{
-  files <- list.files(dir)
-  meta <- files[grep("meta",files)]
-  out <- data.table(read.table( file.path(dir,meta),sep = "\t",stringsAsFactors = FALSE,
-                               header = TRUE))
-  return(out)
-}
-
 tf_meta <- load_meta(tf_dir)
 dhs_meta <- load_meta(dhs_dir)
-
-load_files <- function(meta,dir,mc)
-{  
-  files <- paste0(meta[,(File.accession)],".bed.gz")
-  bed_files <- mclapply(file.path(dir,files),read.table,
-    stringsAsFactors = FALSE,header = FALSE,mc.cores = mc)
-  gr <- lapply(bed_files,function(x){
-    out <- GRanges(seqnames = x$V1,
-                   ranges = IRanges(start = x$V2,end = x$V3),
-                   strand = "*")
-    return(out)})
-  return(gr)
-}
 
 ## only get optimal_idr peaks
 tf_meta <- tf_meta[grep("optimal idr",Output.type)]
