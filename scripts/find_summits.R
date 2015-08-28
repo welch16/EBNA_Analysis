@@ -34,7 +34,7 @@ setkey(chrom.size,V1)
 
 mc <- detectCores()
 
-peaks <- cbind(unified_lists$peaks,unified_lists$overlaps)
+peaks <- unified_lists$peaks
 overlaps <- unified_lists$overlaps
 
 fl <- 200   #### using the same fragment length used to call peaks
@@ -56,7 +56,14 @@ dt2gr <- function(x){
   GRanges(seqnames = x[,(seqnames)],
           ranges = IRanges(start = x[,(start)],end = x[,(end)]),
           strand = "*")}
-            
+
+gr2dt <- function(x){
+  dt <- data.table(seqnames = as.character(seqnames(x)),
+             start = start(x),
+             end = end(x))
+  return(dt)
+}
+
 fix <- lapply(sets,function(x,peaks){
   idx <- !is.na(peaks[[x]][,(seqnames)])
   out <- peaks[[x]][idx]
@@ -73,17 +80,29 @@ segvis <- lapply(segvis,getCoverage,mc)
 
 
 ## using same bandwidth as in the histone profiless
-ummits <- lapply(segvis,findSummit,151,mc)
+summits <- lapply(segvis,findSummit,151,mc)
 
-summits <- lapply(read_files[,(sets)],function(x,summits,overlaps){
+summits <- lapply(read_files[,(sets)],function(x,summits,peaks,overlaps,segvis){
+
   if(x == "JK92" | x == "JK234"){
-    out <- overlaps[["RBPJ"]]
+    x1 <- "RBPJ"
   }else{
-    out <- overlaps[[x]]
+    x1 <- x
   }
-  out[out == 1] <- summits[[x]]
+
+  reg <- gr2dt(regions(segvis[[x]]))
+  reg[,summit := summits[[x]]]
+
+  idx <-which( overlaps[[x1]] == 1)
+
+  ov <- findOverlaps(dt2gr(peaks[idx]),dt2gr(reg))
+
+  reordered_summit <- reg[subjectHits(ov) , (summit)]
+
+  out <- overlaps[[x1]]
+  out[out == 1] <- reordered_summit
   out[out == 0] <- NA
-return(out)},summits,overlaps)
+return(out)},summits,peaks,overlaps,segvis)
 
 names(summits) <- paste0(read_files[,(sets)],".summit")
 summits <- cbind(peaks[,1:3,with = FALSE],as.data.table(summits))
