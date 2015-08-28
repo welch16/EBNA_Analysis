@@ -1,4 +1,4 @@
-
+ 
 ## for this script we are building the incidence matrix that we are going to use
 ## to improve the analysis
 
@@ -45,8 +45,10 @@ unify_list <- function(...)
   ## build RBPJ as JK234 + JK92 (that don't overlap JK234)
   ## if we want to build the peaks with JK separate and then make RBPJ as any of both
   ## all_peaks$RBPJ <- ifelse(all_peaks$JK92 + all_peaks$JK234 > 0 , 1 , 0)
-  
+
   peak_list[["RBPJ"]] <- sort(c(peak_list[["JK234"]],peak_list[["JK92"]][-subjectHits(ov)]))
+
+  
   all_peaks <- Reduce(c,peak_list[grep("JK",names(peak_list),invert = TRUE)])
   all_peaks <- reduce(all_peaks)
 
@@ -68,9 +70,25 @@ unify_list <- function(...)
     return(x)},probs,post_prob,SIMPLIFY  = FALSE)
   probs <- as.data.table(probs)
   probs[,minProb := pmin(EBNA2, EBNA3A, EBNA3B, EBNA3C,RBPJ,na.rm = TRUE)]
-   
-  out <- list(peaks = data.table(seqnames = as.character(seqnames(all_peaks)),start = start(all_peaks),
-                end = end(all_peaks),width = width(all_peaks)), overlaps = overlaps , probs = probs)
+
+  peaks <- data.table(seqnames = as.character(seqnames(all_peaks)),start = start(all_peaks),
+                end = end(all_peaks),width = width(all_peaks))
+
+  peak_coordinates <- lapply(peak_list[grep("JK",names(peak_list),invert = TRUE)],
+    function(x,all_peaks){
+      ov <- findOverlaps(x,all_peaks)
+      sqnms <- rep(NA,subjectLength(ov))
+      sqnms[subjectHits(ov)] <- as.character(seqnames(x))
+      dt <- data.table(seqnames = sqnms)
+      dt[ subjectHits(ov), start := start(x) ]
+      dt[ subjectHits(ov), end := end(x) ]
+      return(dt)
+    },all_peaks)
+
+
+  out <- list(peaks = peaks, overlaps = overlaps , probs = probs)
+  out <- c(out,peak_coordinates)
+
   return(out)
 }
 
