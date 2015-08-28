@@ -45,17 +45,17 @@ inst/generated/Big_overlaps_matrix.csv:
 
 
 data/RData/unified_lists_wProbs.RData:
-	R CMD BATCH scripts/build_base_lists.R
+	/unsup/R-3.2.1/bin/R CMD BATCH scripts/build_base_lists.R
 
 data/RData/summits.RData:data/RData/unified_lists_wProbs.RData
-	R CMD BATCH scripts/find_summits.R
+	/unsup/R-3.2.1/bin/R CMD BATCH scripts/find_summits.R
 
 data/RData/factor_overlaps.RData:data/RData/unified_lists_wProbs.RData
-	R CMD BATCH scripts/factor_overlaps.R
+	/unsup/R-3.2.1/bin/R CMD BATCH scripts/factor_overlaps.R
 
 data/RData/sequences_around_summit.RData:data/RData/summits.RData data/RData/unified_lists_wProbs.RData
-	R CMD BATCH scripts/extract_sequences.R
+	/unsup/R-3.2.1/bin/R CMD BATCH scripts/extract_sequences.R
 
 figures/for_paper/fig1.pdf:data/RData/unified_lists_wProbs.RData
-	R CMD BATCH scripts/fig1.R
+	/unsup/R-3.2.1/bin/R CMD BATCH scripts/fig1.R
 
