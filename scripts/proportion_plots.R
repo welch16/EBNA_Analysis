@@ -57,7 +57,8 @@ prop_plot <- function(set, data)
                                        linesize = 1)+
     theme(axis.text.x = element_text(angle = 90, colour = "black",size = 6),legend.position = "none")+
     scale_fill_manual(values = rainbow(76))+
-    xlab("ENCODE TFs")+ylab("Fraction of peaks")+ggtitle(set)
+    xlab("ENCODE TFs")+ylab("Fraction of peaks")+ggtitle(set)+
+    ylim(0,.85)
   return(p)
 }
 
