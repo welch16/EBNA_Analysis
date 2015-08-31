@@ -59,3 +59,5 @@ data/RData/sequences_around_summit.RData:data/RData/summits.RData data/RData/uni
 figures/for_paper/fig1.pdf:data/RData/unified_lists_wProbs.RData
 	/unsup/R-3.2.1/bin/R CMD BATCH scripts/fig1.R
 
+profiles:
+	/unsup/R-3.2.1/bin/R CMD BATCH scripts/histone_profiles.R
