@@ -59,5 +59,9 @@ data/RData/sequences_around_summit.RData:data/RData/summits.RData data/RData/uni
 figures/for_paper/fig1.pdf:data/RData/unified_lists_wProbs.RData
 	/unsup/R-3.2.1/bin/R CMD BATCH scripts/fig1.R
 
+data/RData/TF_overlap_proportion.RData:data/RData/factor_overlaps.RData data/RData/unified_lists_wProbs.RData
+	/unsup/R-3.2.1/bin/R CMD BATCH scripts/proportion_plots.R
+
 profiles:
 	/unsup/R-3.2.1/bin/R CMD BATCH scripts/histone_profiles.R
+
