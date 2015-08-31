@@ -23,6 +23,7 @@ prepare_data <- function(set, peaks,overlaps,probs,factor_overlaps,sequences)
   seq <- sequences[[paste0(set,".sequence")]]
   seq <- seq[!is.na(seq)]
   out[["sequence"]] <- seq
+  out[,width := NULL]
   return(out)
 }
 
@@ -30,7 +31,7 @@ data_sets <- lapply(sets,prepare_data,peaks,overlaps,probs,factor_overlaps,seque
 
 write <- function(set,data)
 {
-  out_dir <- "data/txt_files/"
+  out_dir <- "data/sequences/"
   write.table(data , file = file.path(out_dir,paste0(set,"_sequences.txt")),
               sep = "\t",col.names = TRUE,quote = FALSE,row.names = FALSE)
 }
