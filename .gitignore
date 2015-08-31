@@ -1,3 +1,4 @@
 data/encode/*
+data/RData/profile_matrices/*
 inst/*
 .RData
