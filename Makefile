@@ -67,3 +67,6 @@ profiles:
 
 sequences:data/RData/sequences_around_summit.RData data/RData/factor_overlaps.RData
 	/unsup/R-3.2.1/bin/R CMD BATCH scripts/print_sequences.R
+
+figS1:data/RData/factor_overlaps.RData
+	/unsup/R-3.2.1/bin/R CMD BATCH scripts/figS1.R
