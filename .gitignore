@@ -1,4 +1,5 @@
 data/encode/*
 data/RData/profile_matrices/*
+data/RData/profile_matrices_old/*
 inst/*
 .RData
