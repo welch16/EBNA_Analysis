@@ -30,7 +30,6 @@ files <- files[grep("bam",files)]
 
 
 sets <- c("EBNA2","EBNA3A","EBNA3B","EBNA3C","RBPJ")
-sets <- sets[3]
 
 create_profile_sets <- function(set,summits,window_ext)
 {
