@@ -65,6 +65,9 @@ data/RData/TF_overlap_proportion.RData:data/RData/factor_overlaps.RData data/RDa
 profiles:
 	/unsup/R-3.2.1/bin/R CMD BATCH --no-save scripts/histone_profiles.R
 
+histone_heatmap:
+	/unsup/R-3.2.1/bin/R CMD BATCH --no-save scripts/histone_signal_analysis.R
+
 sequences:data/RData/sequences_around_summit.RData data/RData/factor_overlaps.RData
 	/unsup/R-3.2.1/bin/R CMD BATCH --no-save scripts/print_sequences.R
 
