@@ -14,8 +14,8 @@ load_clean_profile <- function(file ,window_ext)
 grepV <- function(pattern,x,ignore.case = FALSE,perl = FALSE,value = FALSE,
   fixed = FALSE,useBytes = FALSE, invert = FALSE)
 {
-  return(x[grep(pattern,x,ignore.case = FALSE,perl = FALSE,value = FALSE,
-  fixed = FALSE,useBytes = FALSE, invert = FALSE)])
+  return(x[grep(pattern,x,ignore.case = ignore.case,perl = perl,value = value,
+  fixed = fixed,useBytes = useBytes, invert = invert)])
 }
 
 add_names <- function(set,data,mc = 24)
