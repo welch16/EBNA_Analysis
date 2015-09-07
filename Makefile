@@ -43,7 +43,6 @@ data/RData/chromHMM_proportions_dnase.RData:
 inst/generated/Big_overlaps_matrix.csv:
 	R CMD BATCH --no-save scripts/unify_overlap_matrix.R
 
-
 data/RData/unified_lists_wProbs.RData:
 	/unsup/R-3.2.1/bin/R CMD BATCH --no-save scripts/build_base_lists.R
 
@@ -65,7 +64,7 @@ data/RData/TF_overlap_proportion.RData:data/RData/factor_overlaps.RData data/RDa
 profiles:
 	/unsup/R-3.2.1/bin/R CMD BATCH --no-save scripts/histone_profiles.R
 
-histone_heatmap:
+data/RData/pam_analysis_K10.RData:
 	/unsup/R-3.2.1/bin/R CMD BATCH --no-save scripts/histone_signal_analysis.R
 
 sequences:data/RData/sequences_around_summit.RData data/RData/factor_overlaps.RData

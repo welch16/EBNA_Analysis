@@ -8,6 +8,7 @@ library(reshape2)
 library(RColorBrewer)
 library(parallel)
 library(pracma)
+library(cluster)
 
 source("R/profile_functions.R")
 
@@ -121,8 +122,7 @@ histones <- grepV("H3",histones)
 histones <- grepV("79",histones,invert = TRUE)
 
 
-
-heatmap_analysis <- function(set, data , cols)
+create_matrix <- function(set,data,cols)
 {
   setkey(data,histone)
   data <- copy(data[cols])
@@ -130,6 +130,13 @@ heatmap_analysis <- function(set, data , cols)
   data <- data[set]
   data <- dcast.data.table(data =data , match ~ histone ,value.var = "V1")
   data <- log10(1 + as.matrix(data[,-1,with = FALSE]))
+  return(data)
+}
+
+
+heatmap_analysis <- function(set, data , cols)
+{
+  data <- create_matrix(set,data,cols)
   heatmap(data , col = brewer.pal(11,"RdYlGn"),labRow = "",main = set)
 }
 
@@ -159,6 +166,54 @@ heatmap_analysis("RBPJ",stats,histones)
 heatmap_analysis("RBPJ",stats_dnase,histones)
 dev.off()
 
+## the clustering pattern for the histone marks is topologically equivalente among
+## all datasets. It may be worth to look into the LDA idea of normal clustering
+
+pam_analysis <- function(set,K,data,cols)
+{
+  data <- create_matrix(set,data,cols)
+  pam_analysis <- pam(data,K)
+
+  out <- list()
+  out[["nr_clusters"]] <- table(pam_analysis$clustering)
+
+  medoids <- data.table(pam_analysis$medoids)
+  medoids[,cluster := 1:K]
+
+  out[["medoids"]] <- medoids  
+  medoids <- melt(medoids,id.vars = "cluster")
 
 
+  rf <- colorRampPalette(brewer.pal(11,"RdYlGn"))
 
+  out[["plot"]] <- ggplot(medoids , aes(variable , as.factor(cluster) ,fill = value))+
+    geom_tile()+ xlab("Histone marks")+
+    scale_fill_gradientn(colours = rf(8))+
+    theme(legend.position = "top",axis.text.x = element_text(angle = 90))+
+    ggtitle(set)
+
+  return(out)
+}
+
+K <- 10
+
+result <- list()
+result_dnase <- list()
+
+for(set in sets){
+  pdf(file = file.path(figs_dir,paste0(set,"_medoids_K",K,".pdf")))
+  result[[set]] <- pam_analysis(set,K,stats,histones)
+  result_dnase[[set]] <- pam_analysis(set,K,stats_dnase,histones)
+  print(result[[set]][["nr_clusters"]])
+  print(result[[set]][["plot"]])
+  print(result_dnase[[set]][["nr_clusters"]])
+  print(result_dnase[[set]][["plot"]])
+  dev.off()
+}
+
+
+results <- list()
+results[["all"]] <- result
+results[["dnase"]] <- result_dnase
+
+save(results,file = "data/RData/pam_analysis_K10.RData")
