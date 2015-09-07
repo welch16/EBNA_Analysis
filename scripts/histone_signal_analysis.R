@@ -171,8 +171,8 @@ dev.off()
 
 pam_analysis <- function(set,K,data,cols)
 {
-  data <- create_matrix(set,data,cols)
-  pam_analysis <- pam(data,K)
+  mat <- create_matrix(set,data,cols)
+  pam_analysis <- pam(mat,K)
 
   out <- list()
   out[["nr_clusters"]] <- table(pam_analysis$clustering)
@@ -183,14 +183,24 @@ pam_analysis <- function(set,K,data,cols)
   out[["medoids"]] <- medoids  
   medoids <- melt(medoids,id.vars = "cluster")
 
+  mat <- data.table(mat)
+  mat[,cluster := pam_analysis$clustering]
 
+  mat <- melt(mat,id.vars = "cluster")
+
+  out[["density"]] <- ggplot(mat , aes(value,fill = variable ))+geom_density(kernel = "rectangular")+
+    scale_fill_brewer(palette = "Set1")+
+    facet_grid( variable ~ cluster , scale = "free_y" )+xlim(0,1.5)+
+  theme(legend.position = "none",strip.text.y = element_text(angle = 0),
+        axis.text.y = element_text(size = 8),axis.text.x = element_text(size = 8,angle = 45))
+  
   rf <- colorRampPalette(brewer.pal(11,"RdYlGn"))
 
   out[["plot"]] <- ggplot(medoids , aes(variable , as.factor(cluster) ,fill = value))+
     geom_tile()+ xlab("Histone marks")+
     scale_fill_gradientn(colours = rf(8))+
     theme(legend.position = "top",axis.text.x = element_text(angle = 90))+
-    ggtitle(set)
+    ggtitle(set)+ylab("Clusters")
 
   return(out)
 }
@@ -201,13 +211,18 @@ result <- list()
 result_dnase <- list()
 
 for(set in sets){
+  message(set)
   pdf(file = file.path(figs_dir,paste0(set,"_medoids_K",K,".pdf")))
   result[[set]] <- pam_analysis(set,K,stats,histones)
   result_dnase[[set]] <- pam_analysis(set,K,stats_dnase,histones)
   print(result[[set]][["nr_clusters"]])
   print(result[[set]][["plot"]])
   print(result_dnase[[set]][["nr_clusters"]])
-  print(result_dnase[[set]][["plot"]])
+  print(result_dnase[[set]][["plot"]])  
+  dev.off()
+  pdf(file = file.path(figs_dir,paste0(set,"_cluster_density_K",K,".pdf")))
+  print(result[[set]][["density"]])
+  print(result_dnase[[set]][["density"]])
   dev.off()
 }
 
