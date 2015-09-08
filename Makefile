@@ -58,6 +58,9 @@ data/RData/sequences_around_summit.RData:data/RData/summits.RData data/RData/uni
 figures/for_paper/fig1.pdf:data/RData/unified_lists_wProbs.RData
 	/unsup/R-3.2.1/bin/R CMD BATCH --no-save scripts/fig1.R
 
+figures/for_paper/fig3C_EBNA3B.pdf:data/RData/unified_lists_wProbs.RData data/RData/factor_overlaps.RData
+	/unsup/R-3.2.1/bin/R CMD BATCH --no-save scripts/fig3C.R
+
 data/RData/TF_overlap_proportion.RData:data/RData/factor_overlaps.RData data/RData/unified_lists_wProbs.RData
 	/unsup/R-3.2.1/bin/R CMD BATCH --no-save scripts/proportion_plots.R
 
@@ -72,3 +75,4 @@ sequences:data/RData/sequences_around_summit.RData data/RData/factor_overlaps.RD
 
 figS1:data/RData/factor_overlaps.RData
 	/unsup/R-3.2.1/bin/R CMD BATCH --no-save scripts/figS1.R
+
