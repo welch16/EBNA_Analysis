@@ -83,4 +83,4 @@ inst/generated/supplement_matrix.csv:data/RData/unified_lists_wProbs.RData data/
 	/unsup/R-3.2.1/bin/R CMD BATCH --no-save scripts/save_supplement.R
 
 wig_files:
-	/unsup/R-3.2.1/bin/R CMD BATCH --no-save/create_wig_files.R
+	/unsup/R-3.2.1/bin/R CMD BATCH --no-save scripts/create_wig_files.R
