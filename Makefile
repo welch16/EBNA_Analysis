@@ -79,4 +79,5 @@ sequences:data/RData/sequences_around_summit.RData data/RData/factor_overlaps.RD
 figS1:data/RData/factor_overlaps.RData
 	/unsup/R-3.2.1/bin/R CMD BATCH --no-save scripts/figS1.R
 
-
+inst/generated/supplement_matrix.csv:data/RData/unified_lists_wProbs.RData data/RData/factor_overlaps.RData
+	/unsup/R-3.2.1/bin/R CMD BATCH --no-save scripts/save_supplement.R
