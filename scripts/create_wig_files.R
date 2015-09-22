@@ -65,13 +65,12 @@ gen_wig_wrap <- function(set, samples, read_dir,out_dir,file_type, fl,bs,chrom.s
   mcols(bins)$wig <- round(1e6 *  countOverlaps(bins,gr) / depth,4)
   message("Start writing wig file for " , set )
 
-  ff <- file.path(out_dir,paste0(set,".wig"))  
   for(chr in chrom.sizes[,(V1)]){
     message(chr)
-    cat(paste0("variableStep chrom=",chr," span=",bs),file = ff ,append = TRUE , sep = "\n")
     bn <- subset(bins,seqnames == chr)
     lines <- paste(start(bn),bn$wig,sep = " ")
-    z <- lapply(lines,cat , file = ff ,append = TRUE , sep = "\n")    
+    write.table(lines,file = file.path(out_dir,paste0(set,"_",chr,".wig")),
+                quote = FALSE,col.names = FALSE,row.names = FALSE)
   }
 }
 
