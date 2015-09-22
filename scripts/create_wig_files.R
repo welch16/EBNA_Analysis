@@ -62,7 +62,7 @@ gen_wig_wrap <- function(set, samples, read_dir,out_dir,file_type, fl,bs,chrom.s
                  bs,chrom.sizes)
   bins <- do.call(c,bins)
   depth <- nrow(dt)
-  mcols(bins)$wig <- round(1e6 *  countOverlaps(bins,gr) / depth,4)
+  mcols(bins)$wig <- as.integer(countOverlaps(bins,gr) )
   message("Start writing wig file for " , set )
 
   for(chr in chrom.sizes[,(V1)]){
