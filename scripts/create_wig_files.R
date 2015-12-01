@@ -8,7 +8,7 @@ library(GenomicRanges)
 
 ### set parameters
 fragLen <- 200 
-binSize <- 200 
+binSize <- 5000
 
 read_dir <- "inst/bed_reads"
 out_dir <- "inst/wig_files"
