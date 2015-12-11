@@ -5,6 +5,9 @@ library(GenomicAlignments)
 library(ggplot2)
 library(data.table)
 library(ChIPUtils)
+library(GenomicFeatures)
+library(org.Hs.eg.db)
+
 
 ## load West peaks
 
@@ -15,169 +18,164 @@ west <- lapply(file.path(west_dr,west_peaks),read.table,skip = 1)
 west <- lapply(west,data.table)
 names(west) <- c("EBNA2","EBNA3C")
 
-load("data/ranges/all_EBV_GenomicRanges.RData")
+load(file = "data/RData/unified_lists_wProbs.RData") ## unified_lists
+load("data/RData/factor_overlaps.RData")
+
+DT <- cbind(unified_lists$peaks, unified_lists$overlaps)
+
+DT <- cbind(DT,factor_overlaps)
+
+peaks <- dt2gr(DT[,1:3,with = FALSE])
 
 west <- lapply(west,function(x){
   setnames(x,names(x),c("seqnames","start","end","name","score"))
   return(x)})
 
-west_gr <- lapply(west,function(x)dt2gr(x[,1:3,with =FALSE]))
+west_ebna2 <- ifelse(countOverlaps(peaks,dt2gr(west[["EBNA2"]])) > 0,1,0)
+west_ebna3C <- ifelse(countOverlaps(peaks,dt2gr(west[["EBNA3C"]])) > 0,1,0)
 
-ranges <- lapply(ranges,function(x){
-  mcols(x)$West_EBNA2 <- ifelse(
-    countOverlaps(x,west_gr[["EBNA2"]]) > 0,1,0)
-  return(x)})
-
-ranges <- lapply(ranges,function(x){
-  mcols(x)$West_EBNA3C <- ifelse(
-    countOverlaps(x,west_gr[["EBNA3C"]]) > 0,1,0)
-  return(x)})
-
-ranges_dt <- lapply(ranges,gr2dt)
-
-west_analysis <- function(dt,nm,which,what,dnase = TRUE)
-{                          
-  stopifnot(which %in% c("EBNA2","EBNA3C"))
-  stopifnot(what %in% c("tf","histone","all","ours"))
-
-  nms <- names(dt)
-  nms <- nms[-c(1:8)]
-  nms <- nms[ nms != "allTF"]
-
-  west <- nms[grep("West",nms)]
-  nms <- nms[grep("West",nms,invert = TRUE)]
-
-  ours <- c("EBNA2","EBNA3A","EBNA3B","EBNA3C","JK92","JK234","RBPJ")
-  nms <- nms[-sapply(ours,grep,nms)]
-  if(dnase){
-    dt <- dt[Dnase == 1]
-  }
-  nms <- nms[grep("Dnase",nms,invert = TRUE)]
-  
-  histone <- c("H2ZA","H3K27AC","H3K27ME3","H3K36ME3","H3K4ME1",
-               "H3K4ME2","H3K4ME3","H3K79ME2","H3K9AC","H3K9ME3",
-               "H4K20ME1")
-  nms <- nms[-sapply(histone,grep,nms)]
-  if(what == "all"){
-    cols <- c("ours","histone","tf")
-  }else if(what == "ours"){
-    cols <- ours
-  }else if(what == "tf"){
-    cols <- nms
-  }else{
-    cols <- histone
-  }
-  which <- west[grep(which,west)]
-  idx <- dt[[which]] == 1
-
-    browser()
+DT[,"West.EBNA2" := west_ebna2]
+DT[,"West.EBNA3C" := west_ebna3C]
 
 
-  dt <- dt[,cols,with = FALSE]
 
-  props <- split(dt,idx)
-  props <- lapply(props,colMeans)
-  props <- lapply(props,function(x){
-    nn <- names(x)
-    names(x) <- NULL
-    data.table(col = nn,prop = x)})
-  props <- mapply(function(x,y)x[,overlap := y],props,names(props),
-                  SIMPLIFY = FALSE)
-  props <- do.call(rbind,props)
-  
-  ## get indx
-  ggplot(props,aes(col,prop,fill = overlap))+
-    geom_bar(stat ="identity",position = "dodge",width = .5)+
-    theme_bw()+
-    theme(axis.text.x = element_text(angle = 90))+
-    scale_fill_brewer(palette = "Set1")+ggtitle(nm)
-
+if(!file.exists("inst/gencode/annot.sqlite")){
+  txDb <- makeTranscriptDbFromGFF("inst/gencode/gencode.v19.annotation.gtf",
+                                  format = "gtf",species = "human")
+  saveDb(txDb,"inst/gencode/annot.sqlite")
+}else{
+  txDb <- loadDb("inst/gencode/annot.sqlite")
 }
 
+gene <- genes(txDb)
+
+## remove chrM,chrY (since this are female cells) and add chr length info
+
+chrom.info <- read.table(file="/p/keles/SOFTWARE/hg19.chrom.sizes", header=FALSE)
+names(chrom.info) <- c('chrom','length')
+chrom.info$is_circular <- rep(FALSE, dim(chrom.info)[1])
+chrom.info <- chrom.info[-21,]
+
+set_Seqinfo <- function(gr,chrom.info)
+{
+  chr <- as.character(chrom.info[,1])
+  seqlevels(gr,force = TRUE) <- chr
+  idx <- match(seqnames(seqinfo(gr)),chr)
+  ll <- chrom.info[,2]
+  names(ll) <- chr
+  yy <- chrom.info[,3]
+  names(yy) <-  chr
+  seqlengths(gr) <- ll[idx]
+  seqinfo(gr)@is_circular <- yy[idx]
+  return(gr)
+}
+
+gene <- set_Seqinfo(gene,chrom.info)
 
 
-pdf(width = 14,height = 6)
-mapply(west_analysis,ranges_dt,names(ranges_dt),
-       MoreArgs = list("EBNA3C","tf"),SIMPLIFY = FALSE)
-dev.off()
+## blacklist <- set_Seqinfo(unlist(blacklist),chrom.info)
 
 
+getFirstHitIndex <- function(x)sapply(unique(x), function(i) which(x == i)[1])
 
 
+addGeneAnno <- function(annoDb, geneID, type= "Entrez Gene ID")
+{
+  kk <- unlist(geneID)
+  require(annoDb, character.only = TRUE)
+  annoDb <- eval(parse(text=annoDb))
+  if (type == "Entrez Gene ID") {
+    kt <- "ENTREZID"
+  } else if (type =="Ensembl gene ID" || type == "Ensembl Gene ID") {
+    kt <- "ENSEMBL"
+  } else {
+    warnings("geneID type is not supported...\tPlease report it to developer...\n")
+    return(NA)
+  }
+  if (sum(kk %in% keys(annoDb, "ENSEMBL")) > 0){
+    ann <- suppressWarnings(select(annoDb,keys=kk,
+                keytype=kt,
+                columns=c("ENTREZID", "ENSEMBL", "SYMBOL", "GENENAME")))
+    idx <- getFirstHitIndex(ann[,kt])
+    ann <- ann[idx,]
+    idx <- unlist(sapply(kk, function(x) which(x==ann[,kt])))
+    ann <- ann[idx,]
+  } else {
+    ann <- matrix(NA, ncol = 4, nrow = length(geneID))
+    colnames(ann) <- c("ENTREZID", "ENSEMBL", "SYMBOL", "GENENAME")
+  }
+  return(ann)
+}
 
+addGeneAnno2feature <- function(feature,annoDb,type='Ensembl Gene ID')
+{
+  gid <- sapply(feature$gene_id, function(x) strsplit(x, split='.',fix=TRUE)[[1]][1])
+  geneAnno <- addGeneAnno(annoDb, gid,type=type)
+  for(ii in names(geneAnno)){
+    elementMetadata(feature)[[ii]] <- geneAnno[[ii]]
+  }
+  return(feature)
+}
 
-## colors = c("blue","red","chartreuse4","darkorchid4","darkorange","goldenrod4","yellow")
-## names(colors) = c("EBNA3A","EBNA3B","EBNA3C","EBNA2","RBPJ","JK234","JK92")
+annoDb <- "org.Hs.eg.db"
+gene <- addGeneAnno2feature(gene,annoDb)
 
-## # Get EBNA3 range
-## rangeDir <- "../Generated/RData"
-## figsDir <-  "../Generated/Figs"
-## load(file = file.path(rangeDir,"all_EBV_GenomicRanges.RData"))  # ranges
-## aux = c(ranges[["EBNA3A"]],ranges[["EBNA3B"]],ranges[["EBNA3C"]])
-## ebna3 = reduce(GRanges(seqnames = seqnames(aux),ranges= IRanges(start = start(aux),end = end(aux)),strand = "*"))
+gene_fwd <- gene[strand(gene) == "+"]
+gene_bwd <- gene[strand(gene) == "-"]
+chr <- as.character(chrom.info[,1])
 
+gene_fwd <- lapply(chr,function(x,gene)gene[seqnames(gene) == x],gene_fwd)
+gene_bwd <- lapply(chr,function(x,gene)gene[seqnames(gene) == x],gene_bwd)
 
+names(gene_fwd) <- chr
+names(gene_bwd) <- chr
 
+aux_peaks <- as.list(split(peaks,seqnames(peaks)))[chr]
 
+closest_distance_gene <- function(peak,fwd,bwd)
+{
+  fwd_dist <- distanceToNearest(peak,fwd,ignore.strand = TRUE)
+  bwd_dist <- distanceToNearest(peak,bwd,ignore.strand = TRUE)
 
-## # Get West peaks
-## westDir <-  "../WestMJ_peaks"
-## file = list.files(westDir)
+  fwd_symbol <- mcols(fwd)[subjectHits(fwd_dist),"SYMBOL"]
+  bwd_symbol <- mcols(bwd)[subjectHits(bwd_dist),"SYMBOL"]
 
-## west_peaks = read.table(file.path(westDir,file),skip = 1,
-##   colClasses = c("character","numeric","numeric","character","numeric"))
+  fwd_name <- mcols(fwd)[subjectHits(fwd_dist),"GENENAME"]
+  bwd_name <- mcols(bwd)[subjectHits(bwd_dist),"GENENAME"]
 
-## west_range = GRanges(seqnames = west_peaks[[1]],ranges = IRanges(start = west_peaks[[2]],
-##   end = west_peaks[[3]]),strand = "*")
+  fwd_ens <- mcols(fwd)[subjectHits(fwd_dist),"ENSEMBL"]
+  bwd_ens <- mcols(bwd)[subjectHits(bwd_dist),"ENSEMBL"]
 
-## mg = c(0,100,200,500,1000,2000)
+  
+  fdist <- mcols(fwd_dist)$distance
+  bdist <- mcols(bwd_dist)$distance
 
-## overlap.weights <-function(myRange,range,maxGap)
-## {
-##   n = length(myRange)
-##   m = length(range)
-##   interCount = sum(countOverlaps(myRange,range,maxgap = maxGap))
-##   return(c("11"=interCount,"10"=n-interCount,"01"=m-interCount))
-## }
+  fwd <- data.table(fwd_nearest_dist = fdist, fwd_symbol = fwd_symbol,
+                    fwd_name = fwd_name,fwd_ensembl = fwd_ens)
+  bwd <- data.table(bwd_nearest_dist = bdist, bwd_symbol = bwd_symbol,
+                    bwd_name = bwd_name, bwd_ensembl = bwd_ens)
 
-## # For EBNA3A
-## ebna3a_venn = lapply(mg,function(x,ranges,west_range)Venn(SetNames = c(paste0("our_ebna3a_mg=",x),"west"),
-##   Weight = overlap.weights(ranges[["EBNA3A"]],west_range,x)),
-##   ranges,west_range)
-## names(ebna3a_venn) =mg
+  dd = gr2dt(peak)
+  dd[, match := paste0(seqnames,":",start,"-",end)]
 
-## pdf(file =file.path(figsDir,"ebna3a_vs_west_venn.pdf"))
-## lapply(ebna3a_venn,FUN = plot)
-## dev.off()
+  out <- cbind(fwd,bwd)
 
-## # For EBNA3B
-## ebna3b_venn = lapply(mg,function(x,ranges,west_range)Venn(SetNames = c(paste0("our_ebna3b_mg=",x),"west"),
-##   Weight = overlap.weights(ranges[["EBNA3B"]],west_range,x)),
-##   ranges,west_range)
-## names(ebna3b_venn) =mg
+  out[,match := dd$match]
+  
+  return(out)  
+}
 
-## pdf(file =file.path(figsDir,"ebna3b_vs_west_venn.pdf"))
-## lapply(ebna3b_venn,FUN = plot)
-## dev.off()
+annot_genes <- mapply(closest_distance_gene,aux_peaks,gene_fwd,gene_bwd,
+  SIMPLIFY = FALSE)
 
-## # For EBNA3C
-## ebna3c_venn = lapply(mg,function(x,ranges,west_range)Venn(SetNames = c(paste0("our_ebna3c_mg=",x),"west"),
-##   Weight = overlap.weights(ranges[["EBNA3C"]],west_range,x)),
-##   ranges,west_range)
-## names(ebna3c_venn) =mg
+annot_genes <- do.call(rbind,annot_genes)
 
-## pdf(file =file.path(figsDir,"ebna3c_vs_west_venn.pdf"))
-## lapply(ebna3c_venn,FUN = plot)
-## dev.off()
+DT[, match := paste0(seqnames,":",start,"-",end)]                      
 
+DT <- merge(DT,annot_genes,by = "match")
 
-## # For EBNA3C
-## ebna3_venn = lapply(mg,function(x,ranges,west_range)Venn(SetNames = c(paste0("our_ebna3_mg=",x),"west"),
-##   Weight = overlap.weights(ranges,west_range,x)),
-##   ebna3,west_range)
-## names(ebna3_venn) =mg
+DT[,match :=  NULL]
+write.table(DT ,"inst/west/EBV_peaks_West_ov_gene_annot.csv",
+   sep = "\t",quote = FALSE,col.names = TRUE,row.names = FALSE)           
 
-## pdf(file =file.path(figsDir,"ebna3_all_vs_west_venn.pdf"))
-## lapply(ebna3_venn,FUN = plot)
-## dev.off()
 
